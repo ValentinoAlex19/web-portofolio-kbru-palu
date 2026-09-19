@@ -47,7 +47,6 @@
         .sec-tag { font-size: .75rem; font-weight: 800; color: var(--red-p); text-transform: uppercase; letter-spacing: 1px; }
         .sec-title { font-size: 1.7rem; font-weight: 800; color: var(--slate-d); }
         
-        /* Grid Modular */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 24px; box-shadow: var(--shadow); }
@@ -67,16 +66,39 @@
         .tab-wrap { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
         .tab-btn { padding: 7px 16px; border: 1px solid var(--border); background: #fff; border-radius: 5px; cursor: pointer; font-size: .84rem; font-weight: 700; }
         .tab-btn.active { background: var(--red-p); color: #fff; border-color: var(--red-p); }
-        .gal-item { background: #fff; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
-        .gal-thumb { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; }
+        .gal-item { background: #fff; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: .2s; }
+        .gal-item:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+        .gal-thumb { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; display: block; }
         .gal-meta { padding: 14px; }
         .gal-tag { font-size: .7rem; font-weight: 700; color: var(--red-p); background: var(--red-soft); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
-        .gal-cap { font-size: .84rem; font-weight: 600; color: var(--slate-d); }
+        .gal-cap { font-size: .84rem; font-weight: 600; color: var(--slate-d); margin-bottom: 4px; line-height: 1.4; }
+        .gal-date { font-size: .72rem; color: var(--muted); display: block; }
 
         /* Panel Staf Secure */
-        .staff-gate { background: #fff; border: 2px dashed #cbd5e1; border-radius: 10px; padding: 28px 20px; text-align: center; max-width: 600px; margin: 35px auto 0; }
+        .staff-gate { background: #fff; border: 2px dashed #cbd5e1; border-radius: 10px; padding: 28px 20px; text-align: center; max-width: 650px; margin: 35px auto 0; }
         .pin-flex { display: flex; gap: 8px; justify-content: center; max-width: 280px; margin: 14px auto 0; }
         .pin-box { padding: 8px; border: 1px solid var(--border); border-radius: 5px; text-align: center; font-size: 1rem; letter-spacing: 3px; width: 140px; }
+
+        /* Direktori 3 Folder (Hanya Muncul di Ruang Staf) */
+        .folders-section { margin-top: 20px; padding: 20px; background: #fff; border: 1px solid var(--border); border-radius: 10px; }
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
+        .folder-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: .2s; background: var(--canvas); }
+        .folder-card:hover { border-color: var(--red-p); background: #fff; transform: translateY(-2px); }
+        .folder-info { display: flex; align-items: center; gap: 10px; }
+        .folder-icon { color: var(--red-p); display: flex; align-items: center; }
+
+        /* Modal & Lightbox */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: #fff; border-radius: 12px; max-width: 700px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
+        .modal-head { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--canvas); }
+        .modal-body { padding: 20px; overflow-y: auto; }
+        .btn-close-modal { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; }
+        
+        .lightbox-box { background: transparent; max-width: 800px; width: 100%; text-align: center; position: relative; }
+        .lightbox-img { max-width: 100%; max-height: 75vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #000; }
+        .lightbox-cap { color: #fff; margin-top: 12px; font-size: .95rem; font-weight: 600; }
+        .lightbox-meta { color: #fca5a5; font-size: .78rem; margin-top: 4px; }
+        .lightbox-close { position: absolute; top: -35px; right: 0; color: #fff; font-size: 2rem; background: none; border: none; cursor: pointer; }
 
         /* Footer */
         footer { background: var(--slate-d); color: #94a3b8; padding: 45px 0 20px; border-top: 3px solid var(--red-p); font-size: .85rem; }
@@ -187,29 +209,56 @@
             <div class="sec-head">
                 <span class="sec-tag">Jejak Langkah</span>
                 <h2 class="sec-title">Galeri Kegiatan & Arsip Kantor</h2>
+                <p style="font-size:0.88rem; color:var(--muted); margin-top:4px;">Menampilkan dokumentasi terbaru (maksimal 9 foto). Klik foto untuk pratinjau penuh.</p>
             </div>
             
             <div class="tab-wrap">
-                <button class="tab-btn active" onclick="filterGal('all')">Semua</button>
+                <button class="tab-btn active" onclick="filterGal('all')">Semua (Maks 9)</button>
                 <button class="tab-btn" onclick="filterGal('kegiatan')">Kegiatan & HUT</button>
                 <button class="tab-btn" onclick="filterGal('closing')">Closing Klien</button>
                 <button class="tab-btn" onclick="filterGal('sertifikat')">Sertifikasi & Lisensi</button>
             </div>
 
+            <!-- Etalase Publik: Murni 9 Foto Terbaru -->
             <div class="grid-cards" id="galleryContainer"></div>
 
-            <!-- Panel Khusus Staf KBRU Palu -->
+            <!-- Panel Staf KBRU Palu: Di Luar Ruang Publik (Terkunci PIN) -->
             <div class="staff-gate">
                 <strong style="color:var(--slate-d); font-size:.95rem;">Panel Khusus Staf KBRU Palu</strong>
-                <p style="color:var(--muted); font-size:.82rem; margin-top:3px;">Masukkan PIN otorisasi internal untuk unggah dokumentasi baru ke Google Drive kantor:</p>
+                <p style="color:var(--muted); font-size:.82rem; margin-top:3px;">Masukkan PIN otorisasi internal untuk membuka direktori folder, mengunggah, atau menghapus arsip:</p>
                 <div class="pin-flex" id="pinBoxWrap">
                     <input type="password" id="staffPin" class="pin-box" placeholder="••••••" maxlength="8">
                     <button class="btn-cta" style="padding:6px 14px;" onclick="verifyPIN()">Buka</button>
                 </div>
+                <!-- Tempat Injeksi Zero-DOM: Form Upload + Direktori 3 Folder (Hanya Muncul Setelah PIN Benar) -->
                 <div id="uploadGateContainer"></div>
             </div>
         </div>
     </section>
+
+    <!-- Modal Drawer: Isi Folder Lengkap + Tombol Hapus Khusus Staf -->
+    <div class="modal-overlay" id="folderModal" onclick="closeFolderModal(event)">
+        <div class="modal-box">
+            <div class="modal-head">
+                <strong id="modalFolderTitle" style="font-size:0.95rem; color:var(--slate-d);">Isi Direktori Folder</strong>
+                <button class="btn-close-modal" onclick="document.getElementById('folderModal').style.display='none'">&times;</button>
+            </div>
+            <div style="padding:10px 20px; border-bottom:1px solid var(--border);">
+                <input type="text" id="searchFolderInput" placeholder="Cari judul/momen di folder ini..." oninput="filterFolderList()" style="width:100%; padding:8px 12px; font-size:0.84rem; border:1px solid var(--border); border-radius:6px;">
+            </div>
+            <div class="modal-body" id="modalFolderList"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox Popup: Pratinjau Foto Penuh -->
+    <div class="modal-overlay" id="lightboxModal" onclick="closeLightbox(event)">
+        <div class="lightbox-box">
+            <button class="lightbox-close" onclick="document.getElementById('lightboxModal').style.display='none'">&times;</button>
+            <img src="" id="lightboxImg" class="lightbox-img" alt="Pratinjau Foto">
+            <div class="lightbox-cap" id="lightboxCap"></div>
+            <div class="lightbox-meta" id="lightboxMeta"></div>
+        </div>
+    </div>
 
     <!-- Footer Lengkap -->
     <footer id="kontak">
@@ -241,25 +290,24 @@
         </div>
     </footer>
 
-    <!-- Logika Interaktif, Sinkronisasi Google Drive & Verifikasi PIN Langsung -->
+    <!-- Logika Interaktif, Keamanan Terpadu & Sinkronisasi Drive -->
     <script>
-        // 1. Tautan Backend Google Apps Script (Ganti dengan URL Deploy Anda)
         const GALLERY_API_URL = "https://script.google.com/macros/s/AKfycbw6HRCDP_lN0qbiDc8k5DB_OR5765flNOKjWFqkEp1yOVtb6dcpNbmGKfHoB3mD1QVJjw/exec";
 
-        // 2. Kamus SVG Ringkas
         const ICONS = {
-            ig: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>`,
-            li: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>`
+            ig: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>`,
+            li: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>`,
+            web: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
         };
 
-        // 3. Data 6 Personil
+        // 1. Data 6 Personil & Tautan Portofolio Pribadi
         const TEAM = [
-            { name: "Lucia Theodora Worotikan", role: "Branch Manager", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&q=80", ig: "#", li: "#" },
-            { name: "Shelly Octaviani Worotikan", role: "Supervisor (SPV)", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=160&q=80", ig: "#", li: "#" },
-            { name: "Soviyanti Soda", role: "Senior Marketing", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&q=80", ig: "#", li: "#" },
-            { name: "Valentino Alexandro Wullur", role: "Staf Marketing, Operation & Claim", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=80", ig: "https://www.instagram.com/kbru_palu/", li: "#" },
-            { name: "Angelika Brigita Ali", role: "Staf Marketing", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&q=80", ig: "#", li: "#" },
-            { name: "Marcelin Horiana", role: "Staf Operation & Admin", img: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=160&q=80", ig: "#", li: "#" }
+            { name: "Lucia Theodora Worotikan", role: "Branch Manager", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&q=80", ig: "#", li: "#", web: "#" },
+            { name: "Shelly Octaviani Worotikan", role: "Supervisor (SPV)", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=160&q=80", ig: "#", li: "#", web: "#" },
+            { name: "Soviyanti Soda", role: "Senior Marketing", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&q=80", ig: "#", li: "#", web: "#" },
+            { name: "Valentino Alexandro Wullur", role: "Staf Marketing, Operation & Claim", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=80", ig: "https://www.instagram.com/kbru_palu/", li: "#", web: "https://valentinoalex19.github.io/portofolio-valentino/" },
+            { name: "Angelika Brigita Ali", role: "Staf Marketing", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&q=80", ig: "#", li: "#", web: "#" },
+            { name: "Marcelin Horiana", role: "Staf Operation & Admin", img: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=160&q=80", ig: "#", li: "#", web: "#" }
         ];
 
         document.getElementById('teamContainer').innerHTML = TEAM.map(m => `
@@ -269,49 +317,221 @@
                     <h4>${m.name}</h4>
                     <span class="team-role">${m.role}</span>
                     <div class="social-box">
-                        <a href="${m.ig}" class="icon-btn" target="_blank">${ICONS.ig}</a>
-                        <a href="${m.li}" class="icon-btn" target="_blank">${ICONS.li}</a>
+                        <a href="${m.ig}" class="icon-btn" target="_blank" title="Instagram">${ICONS.ig}</a>
+                        <a href="${m.li}" class="icon-btn" target="_blank" title="LinkedIn">${ICONS.li}</a>
+                        <a href="${m.web}" class="icon-btn" target="_blank" title="Website Portofolio">${ICONS.web}</a>
                     </div>
                 </div>
             </div>
         `).join('');
 
-        // 4. Galeri Data & Render
-        const GALLERIES = [
-            { cat: "kegiatan", tag: "Kegiatan & HUT", cap: "Dokumentasi Perayaan HUT KBRU bersama tim cabang Palu.", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=500&q=80" },
-            { cat: "closing", tag: "Closing Klien", cap: "Penutupan polis asuransi aset gudang komersial & logistik Palu.", img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=500&q=80" },
-            { cat: "sertifikat", tag: "Sertifikasi & Lisensi", cap: "Lisensi Pialang Asuransi Resmi Terdaftar & Diawasi OJK.", img: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=500&q=80" }
+        // 2. Data Galeri Awal
+        let activeCategory = 'all';
+        let isStaffAuthorized = false;
+        let ALL_GALLERIES = [
+            { id: "local-1", cat: "kegiatan", tag: "Kegiatan & HUT", cap: "Dokumentasi Perayaan HUT KBRU bersama tim cabang Palu.", timeStr: "Arsip Dokumen", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=500&q=80" },
+            { id: "local-2", cat: "closing", tag: "Closing Klien", cap: "Penutupan polis asuransi aset gudang komersial & logistik Palu.", timeStr: "Arsip Dokumen", img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=500&q=80" },
+            { id: "local-3", cat: "sertifikat", tag: "Sertifikasi & Lisensi", cap: "Lisensi Pialang Asuransi Resmi Terdaftar & Diawasi OJK.", timeStr: "Arsip Dokumen", img: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=500&q=80" }
         ];
 
-        function renderGallery(items) {
-            document.getElementById('galleryContainer').innerHTML = items.map(g => `
-                <div class="gal-item" data-c="${g.cat}">
-                    <img src="${g.img}" class="gal-thumb" alt="${g.tag}">
+        // 3. Logika Menampilkan 9 Foto Terbaru Tanpa Bingkai Kosong
+        function getShowcaseItems(cat) {
+            if (cat === 'all') {
+                const kList = ALL_GALLERIES.filter(g => g.cat === 'kegiatan').slice(0, 3);
+                const cList = ALL_GALLERIES.filter(g => g.cat === 'closing').slice(0, 3);
+                const sList = ALL_GALLERIES.filter(g => g.cat === 'sertifikat').slice(0, 3);
+                return [...kList, ...cList, ...sList];
+            } else {
+                return ALL_GALLERIES.filter(g => g.cat === cat).slice(0, 3);
+            }
+        }
+
+        function renderShowcase() {
+            const items = getShowcaseItems(activeCategory);
+            const box = document.getElementById('galleryContainer');
+            
+            if (!items.length) {
+                box.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--muted); font-size:0.86rem;">Belum ada berkas foto pada kategori ini.</div>`;
+                return;
+            }
+
+            box.innerHTML = items.map(g => `
+                <div class="gal-item" onclick="openLightbox('${g.img}', '${g.cap.replace(/'/g, "\\'")}', '${g.tag}', '${g.timeStr}')">
+                    <img src="${g.img}" class="gal-thumb" alt="${g.tag}" loading="lazy">
                     <div class="gal-meta">
                         <span class="gal-tag">${g.tag}</span>
                         <div class="gal-cap">${g.cap}</div>
+                        <span class="gal-date">&bull; ${g.timeStr}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Perbarui jumlah berkas jika ruang staf sedang aktif
+            if (isStaffAuthorized) updateFolderCounts();
+        }
+
+        function filterGal(cat) {
+            activeCategory = cat;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderShowcase();
+        }
+
+        function updateFolderCounts() {
+            const kCount = ALL_GALLERIES.filter(g => g.cat === 'kegiatan').length;
+            const cCount = ALL_GALLERIES.filter(g => g.cat === 'closing').length;
+            const sCount = ALL_GALLERIES.filter(g => g.cat === 'sertifikat').length;
+            
+            const elK = document.getElementById('cnt-kegiatan');
+            const elC = document.getElementById('cnt-closing');
+            const elS = document.getElementById('cnt-sertifikat');
+            
+            if (elK) elK.innerText = `${kCount} Berkas Terarsip`;
+            if (elC) elC.innerText = `${cCount} Berkas Terarsip`;
+            if (elS) elS.innerText = `${sCount} Berkas Terarsip`;
+        }
+
+        // 4. Sinkronisasi Data Google Drive
+        function loadGalleryFromDrive() {
+            if (!GALLERY_API_URL || GALLERY_API_URL.includes("xxxxxxx")) return;
+            fetch(GALLERY_API_URL)
+                .then(res => res.json())
+                .then(driveFiles => {
+                    if (driveFiles && driveFiles.length > 0) {
+                        ALL_GALLERIES = [...driveFiles, ...ALL_GALLERIES];
+                        renderShowcase();
+                    }
+                })
+                .catch(err => console.log("Menunggu sinkronisasi Drive:", err));
+        }
+        renderShowcase();
+        loadGalleryFromDrive();
+
+        // 5. Lightbox Modal Preview
+        function openLightbox(src, cap, tag, timeStr) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightboxCap').innerText = cap;
+            document.getElementById('lightboxMeta').innerText = `${tag} • ${timeStr}`;
+            document.getElementById('lightboxModal').style.display = 'flex';
+        }
+
+        function closeLightbox(e) {
+            if (!e || e.target.id === 'lightboxModal') {
+                document.getElementById('lightboxModal').style.display = 'none';
+            }
+        }
+
+        // 6. Modal Drawer Folder Khusus Staf
+        let activeFolderCat = '';
+        function openFolderModal(cat) {
+            if (!isStaffAuthorized) return;
+            activeFolderCat = cat;
+            const titles = {
+                kegiatan: 'Direktori Folder 1: Kegiatan & HUT KBRU Palu',
+                closing: 'Direktori Folder 2: Closing Klien Korporat',
+                sertifikat: 'Direktori Folder 3: Sertifikasi & Lisensi Resmi'
+            };
+            document.getElementById('modalFolderTitle').innerText = titles[cat];
+            document.getElementById('searchFolderInput').value = '';
+            renderFolderList();
+            document.getElementById('folderModal').style.display = 'flex';
+        }
+
+        function closeFolderModal(e) {
+            if (!e || e.target.id === 'folderModal') {
+                document.getElementById('folderModal').style.display = 'none';
+            }
+        }
+
+        function renderFolderList() {
+            const query = document.getElementById('searchFolderInput').value.toLowerCase();
+            const list = ALL_GALLERIES.filter(g => g.cat === activeFolderCat && g.cap.toLowerCase().includes(query));
+            const box = document.getElementById('modalFolderList');
+
+            if (!list.length) {
+                box.innerHTML = `<div style="text-align:center; padding:30px; color:var(--muted); font-size:0.85rem;">Tidak ada berkas yang cocok di folder ini.</div>`;
+                return;
+            }
+
+            box.innerHTML = list.map(item => `
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); gap:12px;">
+                    <div style="display:flex; align-items:center; gap:12px; overflow:hidden;">
+                        <img src="${item.img}" style="width:48px; height:48px; object-fit:cover; border-radius:6px; background:#cbd5e1;" loading="lazy">
+                        <div style="overflow:hidden;">
+                            <strong style="font-size:0.84rem; color:var(--slate-d); display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${item.cap}</strong>
+                            <span style="font-size:0.72rem; color:var(--muted);">${item.timeStr}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:6px; align-items:center; white-space:nowrap;">
+                        <button class="btn-cta" style="padding:5px 10px; font-size:0.74rem;" onclick="openLightbox('${item.img}', '${item.cap.replace(/'/g, "\\'")}', '${item.tag}', '${item.timeStr}')">Lihat</button>
+                        ${item.id && !item.id.startsWith('local-') ? `
+                            <button onclick="requestDeleteFile('${item.id}', '${item.cap.replace(/'/g, "\\'")}')" style="background:#ef4444; color:#fff; border:none; border-radius:5px; padding:5px 8px; font-size:0.74rem; font-weight:700; cursor:pointer;" title="Hapus Berkas dari Google Drive">Hapus</button>
+                        ` : ''}
                     </div>
                 </div>
             `).join('');
         }
-        renderGallery(GALLERIES);
 
-        function filterGal(cat) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            renderGallery(cat === 'all' ? GALLERIES : GALLERIES.filter(g => g.cat === cat));
+        function filterFolderList() {
+            renderFolderList();
         }
 
-        // 5. Otorisasi PIN Staf Langsung
+        // 7. Otorisasi Hapus Berkas Dua Arah (Wajib PIN)
+        function requestDeleteFile(fileId, fileCaption) {
+            if (!isStaffAuthorized) {
+                alert("Akses ditolak! Anda harus membuka panel staf dengan PIN terlebih dahulu.");
+                return;
+            }
+
+            if (!confirm(`Apakah Anda yakin ingin menghapus berkas "${fileCaption}" dari Google Drive dan galeri website?`)) {
+                return;
+            }
+
+            fetch(GALLERY_API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    action: "deleteFile",
+                    pin: "202425",
+                    fileId: fileId
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status === "success") {
+                    ALL_GALLERIES = ALL_GALLERIES.filter(g => g.id !== fileId);
+                    renderShowcase();
+                    renderFolderList();
+                    updateFolderCounts();
+                    alert(res.message);
+                } else {
+                    alert("Gagal menghapus: " + res.message);
+                }
+            })
+            .catch(err => {
+                console.error("Delete error:", err);
+                alert("Terjadi kendala jaringan saat menghapus berkas.");
+            });
+        }
+
+        // 8. Otorisasi PIN Staf: Injeksi Zero-DOM (Folder + Form Upload)
         function verifyPIN() {
             const pinInput = document.getElementById('staffPin').value.trim();
             if (pinInput === "202425") {
+                isStaffAuthorized = true;
                 document.getElementById('pinBoxWrap').style.display = 'none';
+
+                // Injeksi antarmuka khusus staf: Form Upload + 3 Modul Folder Arsip Lengkap
                 document.getElementById('uploadGateContainer').innerHTML = `
-                    <div style="text-align:left; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:16px; margin-top:15px;">
-                        <span style="font-size:.75rem; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px; font-weight:700;">Akses Otoritas Terverifikasi</span>
-                        <div style="margin:10px 0;">
-                            <label style="font-size:.78rem; font-weight:700;">Kategori Arsip Folder:</label>
+                    <div style="text-align:left; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:18px; margin-top:15px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                            <span style="font-size:.76rem; background:#dcfce7; color:#166534; padding:3px 8px; border-radius:4px; font-weight:700;">Akses Otoritas Staf Aktif</span>
+                            <button onclick="logoutStaff()" style="background:#ef4444; color:#fff; border:none; padding:5px 12px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">Keluar / Kunci Akses</button>
+                        </div>
+                        
+                        <!-- Form Unggah Berkas Baru -->
+                        <div style="margin-bottom:10px;">
+                            <label style="font-size:.78rem; font-weight:700;">Kategori Folder Tujuan:</label>
                             <select id="uCat" style="width:100%; padding:6px; font-size:.82rem; border-radius:4px; border:1px solid #cbd5e1;">
                                 <option value="kegiatan">1. Kegiatan & HUT</option>
                                 <option value="closing">2. Closing Klien</option>
@@ -329,14 +549,72 @@
                         <button id="btnUploadSubmit" onclick="saveMem()" class="btn-cta" style="width:100%; padding:9px; background:#16a34a; border:none; cursor:pointer;">
                             Unggah ke Folder Google Drive & Publikasikan &rarr;
                         </button>
+                        
+                        <!-- Direktori 3 Folder Khusus Staf -->
+                        <div class="folders-section">
+                            <strong style="color:var(--slate-d); font-size:0.95rem; display:block;">Direktori Arsip Lengkap Google Drive</strong>
+                            <span style="color:var(--muted); font-size:0.78rem;">Klik folder untuk meninjau seluruh riwayat berkas atau menghapus foto.</span>
+                            
+                            <div class="folder-grid">
+                                <div class="folder-card" onclick="openFolderModal('kegiatan')">
+                                    <div class="folder-info">
+                                        <span class="folder-icon">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                                        </span>
+                                        <div>
+                                            <strong style="font-size:0.84rem; color:var(--slate-d); display:block;">1. Kegiatan & HUT</strong>
+                                            <span style="font-size:0.72rem; color:var(--muted);" id="cnt-kegiatan">Memuat...</span>
+                                        </div>
+                                    </div>
+                                    <span style="color:var(--red-p); font-size:0.8rem; font-weight:700;">Buka &rarr;</span>
+                                </div>
+
+                                <div class="folder-card" onclick="openFolderModal('closing')">
+                                    <div class="folder-info">
+                                        <span class="folder-icon">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                                        </span>
+                                        <div>
+                                            <strong style="font-size:0.84rem; color:var(--slate-d); display:block;">2. Closing Klien</strong>
+                                            <span style="font-size:0.72rem; color:var(--muted);" id="cnt-closing">Memuat...</span>
+                                        </div>
+                                    </div>
+                                    <span style="color:var(--red-p); font-size:0.8rem; font-weight:700;">Buka &rarr;</span>
+                                </div>
+
+                                <div class="folder-card" onclick="openFolderModal('sertifikat')">
+                                    <div class="folder-info">
+                                        <span class="folder-icon">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                                        </span>
+                                        <div>
+                                            <strong style="font-size:0.84rem; color:var(--slate-d); display:block;">3. Sertifikasi & Lisensi</strong>
+                                            <span style="font-size:0.72rem; color:var(--muted);" id="cnt-sertifikat">Memuat...</span>
+                                        </div>
+                                    </div>
+                                    <span style="color:var(--red-p); font-size:0.8rem; font-weight:700;">Buka &rarr;</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>`;
+
+                updateFolderCounts();
             } else {
                 alert('PIN Otoritas Staf Salah!');
                 document.getElementById('staffPin').value = '';
             }
         }
 
-        // 6. Simpan Berkas ke Google Drive via Backend Apps Script
+        function logoutStaff() {
+            isStaffAuthorized = false;
+            document.getElementById('uploadGateContainer').innerHTML = '';
+            document.getElementById('staffPin').value = '';
+            document.getElementById('pinBoxWrap').style.display = 'flex';
+            document.getElementById('folderModal').style.display = 'none';
+            alert('Akses formulir dan direktori folder staf telah dikunci kembali.');
+        }
+
+        // 9. Eksekusi Unggah ke Google Drive
         function saveMem() {
             const cat = document.getElementById('uCat').value;
             const cap = document.getElementById('uCap').value.trim();
@@ -347,33 +625,20 @@
             if (!fl) return alert('Harap pilih berkas foto yang ingin diunggah!');
 
             const labels = { kegiatan: 'Kegiatan & HUT', closing: 'Closing Klien', sertifikat: 'Sertifikasi & Lisensi' };
-            
-            // Tampilkan status proses
             btn.disabled = true;
             btn.innerText = "Mengunggah foto ke Google Drive...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64Data = e.target.result;
-                
-                // Jika URL Google Apps Script belum diisi, lakukan fallback tampilan lokal
-                if (!GALLERY_API_URL || GALLERY_API_URL.includes("xxxxxxx")) {
-                    GALLERIES.unshift({ cat, tag: labels[cat], cap, img: base64Data });
-                    renderGallery(GALLERIES);
-                    alert('Catatan: Web App URL belum dipasang. Berkas baru tampil secara lokal di browser.');
-                    btn.disabled = false;
-                    btn.innerText = "Unggah ke Folder Google Drive & Publikasikan →";
-                    document.getElementById('uCap').value = '';
-                    document.getElementById('uFile').value = '';
-                    return;
-                }
 
-                // Kirim data berkas ke Google Drive via Apps Script
                 fetch(GALLERY_API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain;charset=utf-8" },
                     body: JSON.stringify({
+                        pin: "202425",
                         cat: cat,
+                        caption: cap,
                         fileName: fl.name,
                         fileData: base64Data
                     })
@@ -381,9 +646,10 @@
                 .then(res => res.json())
                 .then(res => {
                     if (res.status === "success") {
-                        GALLERIES.unshift({ cat, tag: labels[cat], cap, img: res.url });
-                        renderGallery(GALLERIES);
-                        alert(`Foto sukses disimpan ke folder Google Drive: [${res.folder}] dan diterbitkan ke galeri website!`);
+                        ALL_GALLERIES.unshift({ id: res.fileId, cat: cat, tag: labels[cat], cap: cap, img: res.url, timeStr: res.timeStr });
+                        renderShowcase();
+                        updateFolderCounts();
+                        alert(`Foto sukses disimpan ke folder Google Drive: [${res.folder}] dan masuk ke galeri website!`);
                         document.getElementById('uCap').value = '';
                         document.getElementById('uFile').value = '';
                     } else {
@@ -399,7 +665,6 @@
                     btn.innerText = "Unggah ke Folder Google Drive & Publikasikan →";
                 });
             };
-            
             reader.readAsDataURL(fl);
         }
     </script>
