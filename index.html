@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Kalibesar Raya Utama (KBRU) — Kantor Cabang Palu</title>
+    <style>
+        :root {
+            --red-p: #b91c1c;
+            --red-dark: #881337;
+            --red-soft: #fff1f2;
+            --white: #ffffff;
+            --canvas: #f8fafc;
+            --slate-d: #0f172a;
+            --slate-m: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--canvas); color: var(--slate-m); line-height: 1.6; }
+        .container { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navigasi */
+        nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 3px solid var(--red-p); }
+        .nav-wrap { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; max-width: 1200px; margin: 0 auto; }
+        .brand { font-size: 1.05rem; font-weight: 800; color: var(--red-p); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .badge-branch { background: var(--red-p); color: #fff; font-size: .7rem; padding: 2px 6px; border-radius: 4px; }
+        .nav-links { display: flex; gap: 18px; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--slate-m); font-size: .88rem; font-weight: 600; }
+        .nav-links a:hover { color: var(--red-p); }
+        .btn-nav-tools { background: var(--red-p); color: #fff !important; padding: 6px 14px; border-radius: 6px; }
+
+        /* Hero & Banner */
+        .hero { background: linear-gradient(135deg, #7f1d1d, var(--red-p)); color: #fff; padding: 60px 20px; text-align: center; }
+        .hero h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 12px; }
+        .hero p { max-width: 780px; margin: 0 auto 20px; font-size: .98rem; color: #fecaca; }
+        .tools-banner { background: #fff; border: 1px solid #fee2e2; border-radius: 10px; padding: 20px 24px; margin: -28px auto 40px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: var(--shadow); }
+        .btn-cta { background: var(--red-p); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: 700; font-size: .88rem; transition: .2s; }
+        .btn-cta:hover { background: var(--red-dark); }
+
+        /* Section Global */
+        section { padding: 45px 0; scroll-margin-top: 70px; }
+        .sec-head { text-align: center; margin-bottom: 32px; }
+        .sec-tag { font-size: .75rem; font-weight: 800; color: var(--red-p); text-transform: uppercase; letter-spacing: 1px; }
+        .sec-title { font-size: 1.7rem; font-weight: 800; color: var(--slate-d); }
+        
+        /* Grid Modular */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 24px; box-shadow: var(--shadow); }
+
+        /* Tim Member */
+        .team-card { display: flex; align-items: center; gap: 16px; transition: .2s; }
+        .team-card:hover { transform: translateY(-3px); border-color: #fca5a5; }
+        .avatar-wrap { width: 75px; height: 75px; min-width: 75px; border-radius: 50%; border: 2.5px solid var(--red-p); padding: 2px; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
+        .team-meta h4 { font-size: .96rem; font-weight: 800; color: var(--slate-d); }
+        .team-role { font-size: .78rem; font-weight: 700; color: var(--red-p); display: block; margin-bottom: 8px; }
+        .social-box { display: flex; gap: 8px; }
+        .icon-btn { width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; color: var(--slate-m); text-decoration: none; }
+        .icon-btn:hover { background: var(--red-soft); color: var(--red-p); }
+
+        /* Galeri */
+        .tab-wrap { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+        .tab-btn { padding: 7px 16px; border: 1px solid var(--border); background: #fff; border-radius: 5px; cursor: pointer; font-size: .84rem; font-weight: 700; }
+        .tab-btn.active { background: var(--red-p); color: #fff; border-color: var(--red-p); }
+        .gal-item { background: #fff; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .gal-thumb { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; }
+        .gal-meta { padding: 14px; }
+        .gal-tag { font-size: .7rem; font-weight: 700; color: var(--red-p); background: var(--red-soft); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+        .gal-cap { font-size: .84rem; font-weight: 600; color: var(--slate-d); }
+
+        /* Panel Staf Secure */
+        .staff-gate { background: #fff; border: 2px dashed #cbd5e1; border-radius: 10px; padding: 28px 20px; text-align: center; max-width: 600px; margin: 35px auto 0; }
+        .pin-flex { display: flex; gap: 8px; justify-content: center; max-width: 280px; margin: 14px auto 0; }
+        .pin-box { padding: 8px; border: 1px solid var(--border); border-radius: 5px; text-align: center; font-size: 1rem; letter-spacing: 3px; width: 140px; }
+
+        /* Footer */
+        footer { background: var(--slate-d); color: #94a3b8; padding: 45px 0 20px; border-top: 3px solid var(--red-p); font-size: .85rem; }
+        .ft-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .ft-col h4 { color: #fff; font-size: .96rem; margin-bottom: 14px; }
+        .ft-link { color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .ft-link:hover { color: #fca5a5; }
+
+        @media (max-width: 820px) {
+            .grid-2, .ft-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            .hero h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigasi Pintasan Langsung -->
+    <nav>
+        <div class="nav-wrap">
+            <a href="#beranda" class="brand">PT KALIBESAR RAYA UTAMA <span class="badge-branch">CABANG PALU</span></a>
+            <ul class="nav-links">
+                <li><a href="#profil">Profil & Sejarah</a></li>
+                <li><a href="#visimisi">Visi & Misi</a></li>
+                <li><a href="#tim">Tim Kami</a></li>
+                <li><a href="#galeri">Galeri & Arsip</a></li>
+                <li><a href="#kontak">Lokasi & Kontak</a></li>
+                <li><a href="https://valentinoalex19.github.io/web-konsultan-palu/" target="_blank" class="btn-nav-tools">Kalkulator & Order RFQ &rarr;</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Hero -->
+    <section class="hero" id="beranda">
+        <h1>Konsultan & Pialang Asuransi Independen Palu</h1>
+        <p>Mitra advokasi mitigasi risiko aset industri dan komersial terpercaya di Sulawesi Tengah. Berizin, terdaftar, dan diawasi OJK.</p>
+    </section>
+
+    <!-- Banner Tools -->
+    <div class="container">
+        <div class="tools-banner">
+            <div>
+                <strong style="color:var(--red-p); font-size:1.1rem; display:block;">Portal Kalkulator Premi & Form Pengajuan Asuransi</strong>
+                <span style="color:var(--muted); font-size:.88rem;">Hitung estimasi PAR & MV mandiri, atau ajukan penawaran polis resmi online.</span>
+            </div>
+            <a href="https://valentinoalex19.github.io/web-konsultan-palu/" target="_blank" class="btn-cta">Buka Web Kalkulator & Pengajuan &rarr;</a>
+        </div>
+    </div>
+
+    <!-- Profil & Sejarah -->
+    <section id="profil">
+        <div class="container">
+            <div class="sec-head">
+                <span class="sec-tag">Tentang Kami</span>
+                <h2 class="sec-title">Dedikasi KBRU di Sulawesi Tengah</h2>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="color:var(--red-p); margin-bottom:10px; font-size:1.15rem;">Sejarah Berdirinya KBRU Cabang Palu</h3>
+                    <p style="font-size:.9rem; line-height:1.7;">PT Kalibesar Raya Utama Cabang Palu didirikan sebagai langkah strategis memperluas akses layanan kepialangan asuransi profesional di kawasan Indonesia Timur. Beralamat di Bank Sinarmas Lt. 3, cabang ini berfokus mendampingi kebutuhan mitigasi risiko pelaku usaha, aset komersial, perbankan, dan logistik regional.</p>
+                </div>
+                <div class="card">
+                    <h3 style="color:var(--red-p); margin-bottom:10px; font-size:1.15rem;">Independensi Pialang Resmi</h3>
+                    <p style="font-size:.9rem; line-height:1.7;">Sebagai pialang independen, posisi KBRU Palu 100% mewakili nasabah/tertanggung. Kami mengaudit struktur klausul polis, menegosiasikan rate terbaik ke konsorsium asuransi, serta mengawal proses klaim agar hak penggantian terbayar objektif dan tuntas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visi & Misi -->
+    <section id="visimisi" style="background:#f1f5f9;">
+        <div class="container">
+            <div class="sec-head">
+                <span class="sec-tag">Arah & Komitmen</span>
+                <h2 class="sec-title">Visi & Misi KBRU Cabang Palu</h2>
+            </div>
+            <div class="grid-2">
+                <div class="card" style="border-top: 4px solid var(--red-p);">
+                    <h4 style="font-size:1.05rem; margin-bottom:8px;">Visi Perusahaan</h4>
+                    <p style="font-size:.88rem;">Menjadi pialang dan konsultan asuransi terkemuka yang unggul dalam pelayanan, integritas, dan inovasi manajemen risiko di Indonesia.</p>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--red-p);">
+                    <h4 style="font-size:1.05rem; margin-bottom:8px;">Misi Cabang Palu</h4>
+                    <ul style="padding-left:18px; font-size:.86rem;">
+                        <li>Memberikan advis penutupan polis yang tepat sasaran, objektif, dan ekonomis.</li>
+                        <li>Mengawal penyelesaian klaim secara cepat, adil, dan transparan.</li>
+                        <li>Membina kemitraan kokoh antara nasabah dan konsorsium asuransi berizin OJK.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tim KBRU Cabang Palu -->
+    <section id="tim">
+        <div class="container">
+            <div class="sec-head">
+                <span class="sec-tag">Sumber Daya</span>
+                <h2 class="sec-title">Tim Profesional KBRU Palu</h2>
+            </div>
+            <div class="grid-cards" id="teamContainer"></div>
+        </div>
+    </section>
+
+    <!-- Galeri & Arsip -->
+    <section id="galeri">
+        <div class="container">
+            <div class="sec-head">
+                <span class="sec-tag">Jejak Langkah</span>
+                <h2 class="sec-title">Galeri Kegiatan & Arsip Kantor</h2>
+            </div>
+            
+            <div class="tab-wrap">
+                <button class="tab-btn active" onclick="filterGal('all')">Semua</button>
+                <button class="tab-btn" onclick="filterGal('kegiatan')">Kegiatan & HUT</button>
+                <button class="tab-btn" onclick="filterGal('closing')">Closing Klien</button>
+                <button class="tab-btn" onclick="filterGal('sertifikat')">Sertifikasi & Lisensi</button>
+            </div>
+
+            <div class="grid-cards" id="galleryContainer"></div>
+
+            <!-- Panel Khusus Staf KBRU Palu -->
+            <div class="staff-gate">
+                <strong style="color:var(--slate-d); font-size:.95rem;">Panel Khusus Staf KBRU Palu</strong>
+                <p style="color:var(--muted); font-size:.82rem; margin-top:3px;">Masukkan PIN otorisasi internal untuk unggah dokumentasi baru ke Google Drive kantor:</p>
+                <div class="pin-flex" id="pinBoxWrap">
+                    <input type="password" id="staffPin" class="pin-box" placeholder="••••••" maxlength="8">
+                    <button class="btn-cta" style="padding:6px 14px;" onclick="verifyPIN()">Buka</button>
+                </div>
+                <div id="uploadGateContainer"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Lengkap -->
+    <footer id="kontak">
+        <div class="container">
+            <div class="ft-grid">
+                <div class="ft-col">
+                    <h4>KANTOR KBRU CABANG PALU</h4>
+                    <p style="line-height:1.6; margin-bottom:12px;">Bank Sinarmas, Jl. Masjid Raya No.10 Lt. 3, Lolu Utara, Palu Selatan, Kota Palu, Sulawesi Tengah 94111.</p>
+                    <a href="https://www.google.com/maps/place/KANTOR+PT+KALIBESAR+RAYA+UTAMA+(KBRU)+CABANG+PALU/@-0.899884,119.8717967,805m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2d8bed00104797e1:0x87af506d52f40c06!8m2!3d-0.8998894!4d119.8743716!16s%2Fg%2F11xg7f383m?entry=ttu&g_ep=EgoyMDI2MDkxNi4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn-cta" style="display:inline-block; font-size:.78rem; padding:6px 12px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);">
+                        Buka Titik Koordinat Maps &rarr;
+                    </a>
+                </div>
+                <div class="ft-col">
+                    <h4>MEDIA SOSIAL & KONTAK</h4>
+                    <a href="https://www.instagram.com/kbru_palu/" target="_blank" class="ft-link">Instagram (@kbru_palu)</a>
+                    <a href="https://www.facebook.com" target="_blank" class="ft-link">Facebook Resmi KBRU Palu</a>
+                    <a href="https://wa.me/6281234567890" target="_blank" class="ft-link">WhatsApp Operasional</a>
+                    <a href="mailto:kbrupal@kbru.co.id" class="ft-link">kbrupal@kbru.co.id</a>
+                </div>
+                <div class="ft-col">
+                    <h4>KBRU PUSAT</h4>
+                    <p style="line-height:1.6; margin-bottom:10px;">Melayani jaringan proteksi risiko industri nasional di seluruh Indonesia.</p>
+                    <a href="https://www.kbru.co.id/" target="_blank" class="ft-link" style="color:#fca5a5; font-weight:700;">Kunjungi kbru.co.id &rarr;</a>
+                </div>
+            </div>
+            <div style="text-align:center; padding-top:20px; border-top:1px solid rgba(255,255,255,.08); font-size:.78rem; color:#64748b;">
+                &copy; 2026 PT Kalibesar Raya Utama — Cabang Palu. Terdaftar & Diawasi OJK.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logika Interaktif, Sinkronisasi Google Drive & Verifikasi PIN Langsung -->
+    <script>
+        // 1. Tautan Backend Google Apps Script (Ganti dengan URL Deploy Anda)
+        const GALLERY_API_URL = "https://script.google.com/macros/s/AKfycbw6HRCDP_lN0qbiDc8k5DB_OR5765flNOKjWFqkEp1yOVtb6dcpNbmGKfHoB3mD1QVJjw/exec";
+
+        // 2. Kamus SVG Ringkas
+        const ICONS = {
+            ig: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>`,
+            li: `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>`
+        };
+
+        // 3. Data 6 Personil
+        const TEAM = [
+            { name: "Lucia Theodora Worotikan", role: "Branch Manager", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&q=80", ig: "#", li: "#" },
+            { name: "Shelly Octaviani Worotikan", role: "Supervisor (SPV)", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=160&q=80", ig: "#", li: "#" },
+            { name: "Soviyanti Soda", role: "Senior Marketing", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=160&q=80", ig: "#", li: "#" },
+            { name: "Valentino Alexandro Wullur", role: "Staf Marketing, Operation & Claim", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&q=80", ig: "https://www.instagram.com/kbru_palu/", li: "#" },
+            { name: "Angelika Brigita Ali", role: "Staf Marketing", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&q=80", ig: "#", li: "#" },
+            { name: "Marcelin Horiana", role: "Staf Operation & Admin", img: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=160&q=80", ig: "#", li: "#" }
+        ];
+
+        document.getElementById('teamContainer').innerHTML = TEAM.map(m => `
+            <div class="card team-card">
+                <div class="avatar-wrap"><img src="${m.img}" alt="${m.name}" class="avatar-img"></div>
+                <div class="team-meta">
+                    <h4>${m.name}</h4>
+                    <span class="team-role">${m.role}</span>
+                    <div class="social-box">
+                        <a href="${m.ig}" class="icon-btn" target="_blank">${ICONS.ig}</a>
+                        <a href="${m.li}" class="icon-btn" target="_blank">${ICONS.li}</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // 4. Galeri Data & Render
+        const GALLERIES = [
+            { cat: "kegiatan", tag: "Kegiatan & HUT", cap: "Dokumentasi Perayaan HUT KBRU bersama tim cabang Palu.", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=500&q=80" },
+            { cat: "closing", tag: "Closing Klien", cap: "Penutupan polis asuransi aset gudang komersial & logistik Palu.", img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=500&q=80" },
+            { cat: "sertifikat", tag: "Sertifikasi & Lisensi", cap: "Lisensi Pialang Asuransi Resmi Terdaftar & Diawasi OJK.", img: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=500&q=80" }
+        ];
+
+        function renderGallery(items) {
+            document.getElementById('galleryContainer').innerHTML = items.map(g => `
+                <div class="gal-item" data-c="${g.cat}">
+                    <img src="${g.img}" class="gal-thumb" alt="${g.tag}">
+                    <div class="gal-meta">
+                        <span class="gal-tag">${g.tag}</span>
+                        <div class="gal-cap">${g.cap}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        renderGallery(GALLERIES);
+
+        function filterGal(cat) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderGallery(cat === 'all' ? GALLERIES : GALLERIES.filter(g => g.cat === cat));
+        }
+
+        // 5. Otorisasi PIN Staf Langsung
+        function verifyPIN() {
+            const pinInput = document.getElementById('staffPin').value.trim();
+            if (pinInput === "202425") {
+                document.getElementById('pinBoxWrap').style.display = 'none';
+                document.getElementById('uploadGateContainer').innerHTML = `
+                    <div style="text-align:left; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:16px; margin-top:15px;">
+                        <span style="font-size:.75rem; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:4px; font-weight:700;">Akses Otoritas Terverifikasi</span>
+                        <div style="margin:10px 0;">
+                            <label style="font-size:.78rem; font-weight:700;">Kategori Arsip Folder:</label>
+                            <select id="uCat" style="width:100%; padding:6px; font-size:.82rem; border-radius:4px; border:1px solid #cbd5e1;">
+                                <option value="kegiatan">1. Kegiatan & HUT</option>
+                                <option value="closing">2. Closing Klien</option>
+                                <option value="sertifikat">3. Sertifikasi & Lisensi</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <label style="font-size:.78rem; font-weight:700;">Pilih Berkas Foto:</label>
+                            <input type="file" id="uFile" accept="image/*" style="width:100%; font-size:.82rem;">
+                        </div>
+                        <div style="margin-bottom:12px;">
+                            <label style="font-size:.78rem; font-weight:700;">Keterangan Momen:</label>
+                            <textarea id="uCap" rows="2" placeholder="Tulis rincian kegiatan atau nama sertifikat..." style="width:100%; padding:6px; font-size:.82rem; border-radius:4px; border:1px solid #cbd5e1;"></textarea>
+                        </div>
+                        <button id="btnUploadSubmit" onclick="saveMem()" class="btn-cta" style="width:100%; padding:9px; background:#16a34a; border:none; cursor:pointer;">
+                            Unggah ke Folder Google Drive & Publikasikan &rarr;
+                        </button>
+                    </div>`;
+            } else {
+                alert('PIN Otoritas Staf Salah!');
+                document.getElementById('staffPin').value = '';
+            }
+        }
+
+        // 6. Simpan Berkas ke Google Drive via Backend Apps Script
+        function saveMem() {
+            const cat = document.getElementById('uCat').value;
+            const cap = document.getElementById('uCap').value.trim();
+            const fl = document.getElementById('uFile').files[0];
+            const btn = document.getElementById('btnUploadSubmit');
+
+            if (!cap) return alert('Keterangan momen wajib diisi!');
+            if (!fl) return alert('Harap pilih berkas foto yang ingin diunggah!');
+
+            const labels = { kegiatan: 'Kegiatan & HUT', closing: 'Closing Klien', sertifikat: 'Sertifikasi & Lisensi' };
+            
+            // Tampilkan status proses
+            btn.disabled = true;
+            btn.innerText = "Mengunggah foto ke Google Drive...";
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                
+                // Jika URL Google Apps Script belum diisi, lakukan fallback tampilan lokal
+                if (!GALLERY_API_URL || GALLERY_API_URL.includes("xxxxxxx")) {
+                    GALLERIES.unshift({ cat, tag: labels[cat], cap, img: base64Data });
+                    renderGallery(GALLERIES);
+                    alert('Catatan: Web App URL belum dipasang. Berkas baru tampil secara lokal di browser.');
+                    btn.disabled = false;
+                    btn.innerText = "Unggah ke Folder Google Drive & Publikasikan →";
+                    document.getElementById('uCap').value = '';
+                    document.getElementById('uFile').value = '';
+                    return;
+                }
+
+                // Kirim data berkas ke Google Drive via Apps Script
+                fetch(GALLERY_API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({
+                        cat: cat,
+                        fileName: fl.name,
+                        fileData: base64Data
+                    })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.status === "success") {
+                        GALLERIES.unshift({ cat, tag: labels[cat], cap, img: res.url });
+                        renderGallery(GALLERIES);
+                        alert(`Foto sukses disimpan ke folder Google Drive: [${res.folder}] dan diterbitkan ke galeri website!`);
+                        document.getElementById('uCap').value = '';
+                        document.getElementById('uFile').value = '';
+                    } else {
+                        alert('Gagal mengunggah ke Google Drive: ' + res.message);
+                    }
+                })
+                .catch(err => {
+                    console.error("Upload error:", err);
+                    alert('Terjadi kesalahan jaringan saat mengunggah berkas.');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerText = "Unggah ke Folder Google Drive & Publikasikan →";
+                });
+            };
+            
+            reader.readAsDataURL(fl);
+        }
+    </script>
+</body>
+</html>
