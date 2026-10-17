@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PT Kalibesar Raya Utama (KBRU) — Palu Branch Office</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Custom Corporate Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--canvas); }
+        ::-webkit-scrollbar-thumb { background: var(--slate-m); border-radius: 10px; border: 2px solid var(--canvas); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--red-p); }
+
         :root {
-            /* Palette 3 Warna Elegan: Red (Primary), Slate (Dark), Canvas (White/Light) */
+            /* Palette Terang (Light Mode) */
             --red-p: #b91c1c;
             --red-dark: #881337;
             --red-soft: #fef2f2;
@@ -17,29 +27,104 @@
             --muted: #64748b;
             --border: #e2e8f0;
             --shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
-            --shadow-hover: 0 10px 30px rgba(185, 28, 28, 0.1);
+            --shadow-hover: 0 15px 35px rgba(185, 28, 28, 0.12);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        /* Palette Gelap (Dark Mode) */
+        body.dark-mode {
+            --red-p: #ef4444;
+            --red-dark: #b91c1c;
+            --red-soft: #450a0a;
+            --white: #1e293b;
+            --canvas: #0f172a;
+            --slate-d: #f8fafc;
+            --slate-m: #cbd5e1;
+            --muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 15px 35px rgba(239, 68, 68, 0.15);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background: var(--canvas); color: var(--slate-m); line-height: 1.6; }
+        body { background: var(--canvas); color: var(--slate-m); line-height: 1.6; overflow-x: hidden; position: relative; transition: background 0.3s ease, color 0.3s ease; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* FEATURE 1: Preloader (Splash Screen) */
+        #preloader { position: fixed; inset: 0; background: var(--canvas); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; }
+        #preloader.hide { opacity: 0; visibility: hidden; }
+        .loader-logo { font-size: 2.5rem; font-weight: 800; color: var(--red-p); letter-spacing: 6px; animation: pulseLogo 1.5s infinite ease-in-out; display: flex; align-items: center; gap: 10px; }
+        @keyframes pulseLogo { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.95); } }
+
+        /* FEATURE 2: Scroll Progress Bar */
+        .scroll-progress { position: fixed; top: 0; left: 0; height: 4px; background: var(--red-p); z-index: 2000; width: 0%; border-radius: 0 2px 2px 0; transition: width 0.1s ease-out; }
+
+        /* Dynamic Parallax Background */
+ /* Dynamic Parallax Background 3D */
+        .bg-dynamic { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            z-index: -1; 
+            pointer-events: none; 
+            overflow: hidden; 
+            background: var(--canvas); 
+            perspective: 1000px;
         }
-        .animate-fade { animation: fadeIn 0.5s ease forwards; }
+        .blob { 
+            position: absolute; 
+            border-radius: 50%; 
+            filter: blur(60px); /* Blur diperingan agar bentuk 3D lebih terlihat */
+            opacity: 0.65; 
+            will-change: transform;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .blob-1 { 
+            width: 450px; 
+            height: 450px; 
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.45) 0%, rgba(185, 28, 28, 0.15) 70%, transparent 100%); 
+            top: -80px; 
+            left: -80px; 
+        }
+        .blob-2 { 
+            width: 500px; 
+            height: 500px; 
+            background: radial-gradient(circle, rgba(148, 163, 184, 0.4) 0%, rgba(51, 65, 85, 0.15) 70%, transparent 100%); 
+            bottom: -100px; 
+            right: -100px; 
+        }
+        body.dark-mode .blob-1 { 
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.35) 0%, transparent 70%); 
+        }
+        body.dark-mode .blob-2 { 
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%); 
+        }
+        @keyframes floatBlob { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.1); } }
+
+        /* Reveal on Scroll Animation */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* Navigation */
-        nav { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 3px solid var(--red-p); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        nav { position: sticky; top: 0; z-index: 1000; background: rgba(var(--canvas-rgb), 0.92); backdrop-filter: blur(12px); border-bottom: 3px solid var(--red-p); box-shadow: 0 2px 15px rgba(0,0,0,0.06); transition: background 0.3s ease; }
+        /* Trick for rgba with variables: handled via solid color + backdrop in modern ways, but we'll use a semi-transparent approach for dark mode */
+        body.dark-mode nav { background: rgba(15, 23, 42, 0.92); }
+        body:not(.dark-mode) nav { background: rgba(255, 255, 255, 0.92); }
+        
         .nav-wrap { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; max-width: 1200px; margin: 0 auto; position: relative; }
-        .brand { font-size: 1.05rem; font-weight: 800; color: var(--red-p); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .brand { font-size: 1.1rem; font-weight: 800; color: var(--red-p); text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .badge-branch { background: var(--red-p); color: #fff; font-size: .7rem; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px; }
         
-        .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--slate-m); font-size: .88rem; font-weight: 600; transition: color .2s; }
+        .nav-links { display: flex; gap: 18px; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--slate-m); font-size: .9rem; font-weight: 600; transition: color .2s; }
         .nav-links a:hover { color: var(--red-p); }
+        
+        /* Dark Mode Toggle Button */
+        .btn-theme-toggle { background: var(--border); border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--slate-d); transition: .2s; margin-right: 5px; }
+        .btn-theme-toggle:hover { background: var(--red-soft); color: var(--red-p); }
+        
         .btn-nav-tools { background: var(--red-p); color: #fff !important; padding: 8px 16px; border-radius: 6px; box-shadow: 0 2px 8px rgba(185,28,28,0.3); transition: .2s; }
         .btn-nav-tools:hover { background: var(--red-dark); transform: translateY(-1px); }
 
@@ -47,185 +132,261 @@
         .nav-toggle svg { display: block; width: 22px; height: 22px; }
 
         /* Hero */
-        .hero { background: linear-gradient(135deg, #7f1d1d 0%, var(--red-p) 100%); color: #fff; padding: 60px 20px 70px; text-align: center; }
-        .hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 16px; line-height: 1.2; letter-spacing: -0.5px; }
-        .hero p { max-width: 800px; margin: 0 auto; font-size: 1rem; color: #fee2e2; }
+        .hero { background: linear-gradient(135deg, rgba(127, 29, 29, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%); color: #fff; padding: 70px 20px 80px; text-align: center; position: relative; }
+        .hero::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+') repeat; z-index: -1; }
+        .hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 16px; line-height: 1.2; letter-spacing: -0.5px; }
+        .hero p { max-width: 800px; margin: 0 auto; font-size: 1.05rem; color: #fee2e2; min-height: 50px; }
+        /* Cursor Animasi Mengetik */
+        #heroText::after { content: '|'; font-weight: 400; animation: blink 0.8s infinite; color: #fca5a5; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-        /* Tools & Portals Section (KBRU Palu Tools One Platform for All Access) */
-        .portals-wrap { margin-top: -30px; position: relative; z-index: 10; padding-bottom: 40px; }
-        .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .portal-card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: var(--shadow); transition: all 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-        .portal-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: #fca5a5; }
-        .portal-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--red-p); opacity: 0; transition: .3s; }
-        .portal-card:hover::before { opacity: 1; }
+        /* Tools & Portals Section */
+        .portals-wrap { margin-top: -40px; position: relative; z-index: 10; padding-bottom: 40px; }
+        .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; perspective: 1200px; }
         
-        .portal-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-        .portal-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--red-soft); color: var(--red-p); display: flex; align-items: center; justify-content: center; }
+        .portal-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--shadow); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; display: flex; flex-direction: column; position: relative; overflow: hidden; transform-style: preserve-3d; }
+        body.dark-mode .portal-card { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(10px); }
+        .tilt-card { will-change: transform; }
+
+        .portal-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; transform: translateZ(20px); }
+        .portal-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--red-soft); color: var(--red-p); display: flex; align-items: center; justify-content: center; }
         .portal-icon svg { width: 24px; height: 24px; }
-        .badge-type { font-size: 0.65rem; font-weight: 800; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge-public { background: #dcfce7; color: #166534; }
-        .badge-internal { background: #f1f5f9; color: #475569; }
-        .badge-ai { background: #fef08a; color: #854d0e; }
-
-        .portal-title { font-size: 1.1rem; font-weight: 800; color: var(--slate-d); margin-bottom: 8px; line-height: 1.3; }
-        .portal-desc { font-size: 0.88rem; color: var(--muted); flex-grow: 1; margin-bottom: 20px; line-height: 1.5; }
+        .badge-type { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .btn-portal { display: inline-flex; align-items: center; justify-content: center; width: 100%; background: var(--canvas); color: var(--slate-d); text-decoration: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; border: 1px solid var(--border); transition: .2s; cursor: pointer;}
-        .btn-portal:hover { background: var(--red-p); color: #fff; border-color: var(--red-p); }
-        .btn-portal svg { width: 16px; height: 16px; margin-left: 6px; }
+        body:not(.dark-mode) .badge-internal { background: #f1f5f9; color: #475569; }
+        body:not(.dark-mode) .badge-ai { background: #fef08a; color: #854d0e; }
+        body:not(.dark-mode) .badge-dashboard { background: #dbeafe; color: #1e40af; }
+        body:not(.dark-mode) .badge-kalkulator { background: #dcfce7; color: #166534; }
+        
+        body.dark-mode .badge-internal { background: #334155; color: #e2e8f0; }
+        body.dark-mode .badge-ai { background: #713f12; color: #fef08a; }
+        body.dark-mode .badge-dashboard { background: #1e3a8a; color: #bfdbfe; }
+        body.dark-mode .badge-kalkulator { background: #14532d; color: #bbf7d0; }
+
+        .portal-title { font-size: 1.15rem; font-weight: 800; color: var(--slate-d); margin-bottom: 10px; line-height: 1.3; transform: translateZ(30px); }
+        .portal-desc { font-size: 0.9rem; color: var(--muted); flex-grow: 1; margin-bottom: 24px; line-height: 1.6; transform: translateZ(20px); }
+        
+        .btn-portal { display: inline-flex; align-items: center; justify-content: center; width: 100%; background: var(--canvas); color: var(--slate-d); text-decoration: none; padding: 14px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; border: 1px solid var(--border); transition: all .3s ease; cursor: pointer; transform: translateZ(25px); outline: none;}
+        .btn-portal:hover { background: var(--red-p); color: #fff; border-color: var(--red-p); box-shadow: 0 8px 25px rgba(185, 28, 28, 0.35); transform: translateZ(25px) translateY(-3px); }
+        .btn-portal svg { width: 16px; height: 16px; margin-left: 6px; transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .btn-portal:hover svg { transform: translateX(6px) scale(1.1); }
+
+        /* PIN Security Box for Tools Modal */
+        .tools-gate-box { background: var(--white); padding: 35px 30px; border-radius: 20px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.4); border: 1px solid var(--border); max-width: 380px; width: 90%; position: relative; }
+        .tools-gate-box svg { width: 44px; height: 44px; color: var(--red-p); margin-bottom: 14px; }
+        .tools-gate-box h3 { font-size: 1.25rem; color: var(--slate-d); margin-bottom: 8px; font-weight: 800; }
+        .tools-gate-box p { font-size: 0.88rem; color: var(--muted); margin-bottom: 24px; }
+        .pin-input-group { display: flex; gap: 8px; justify-content: center; }
+        .pin-input-group input { width: 150px; background: var(--canvas); color: var(--slate-d); padding: 12px; border-radius: 8px; border: 2px solid var(--border); text-align: center; font-size: 1.25rem; letter-spacing: 5px; font-weight: bold; outline: none; transition: .2s; }
+        .pin-input-group input:focus { border-color: var(--red-p); }
+        .btn-unlock { background: var(--red-p); color: #fff; border: none; padding: 0 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: .2s; }
+        .btn-unlock:hover { background: var(--red-dark); box-shadow: 0 4px 15px rgba(185,28,28,0.3); }
 
         /* Section Global */
-        section { padding: 60px 0; scroll-margin-top: 70px; }
-        .sec-head { text-align: center; margin-bottom: 40px; }
-        .sec-tag { font-size: .75rem; font-weight: 800; color: var(--red-p); text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 6px; }
-        .sec-title { font-size: 1.8rem; font-weight: 800; color: var(--slate-d); }
+        section { padding: 70px 0; scroll-margin-top: 70px; }
+        .sec-head { text-align: center; margin-bottom: 50px; }
+        .sec-tag { font-size: .75rem; font-weight: 800; color: var(--red-p); text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 8px; }
+        .sec-title { font-size: 1.9rem; font-weight: 800; color: var(--slate-d); }
         
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px; box-shadow: var(--shadow); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: var(--shadow); }
+        body.dark-mode .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
 
         /* Team Members */
-        .team-card { display: flex; align-items: center; gap: 16px; transition: .2s; padding: 20px; }
-        .team-card:hover { transform: translateY(-3px); border-color: #fca5a5; }
-        .avatar-wrap { width: 75px; height: 75px; min-width: 75px; border-radius: 50%; border: 3px solid var(--red-p); padding: 3px; overflow: hidden; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
-        .team-meta h4 { font-size: 1rem; font-weight: 800; color: var(--slate-d); line-height: 1.2; margin-bottom: 4px; }
-        .team-role { font-size: .8rem; font-weight: 700; color: var(--red-p); display: block; margin-bottom: 10px; }
+        .team-card { display: flex; align-items: center; gap: 18px; padding: 24px; background: var(--white); }
+        .avatar-wrap { width: 80px; height: 80px; min-width: 80px; border-radius: 50%; border: 3px solid var(--red-p); padding: 4px; overflow: hidden; transform: translateZ(20px); }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: var(--canvas); }
+        .team-meta { transform: translateZ(25px); }
+        .team-meta h4 { font-size: 1.05rem; font-weight: 800; color: var(--slate-d); line-height: 1.2; margin-bottom: 4px; }
+        .team-role { font-size: .85rem; font-weight: 700; color: var(--red-p); display: block; margin-bottom: 12px; }
         .social-box { display: flex; gap: 8px; }
-        .icon-btn { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; color: var(--slate-m); text-decoration: none; transition: .2s; background: var(--canvas); }
-        .icon-btn:hover { background: var(--red-soft); color: var(--red-p); border-color: #fca5a5; }
+        .icon-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center; color: var(--slate-m); text-decoration: none; transition: all .2s; background: var(--canvas); }
+        .icon-btn:hover { background: var(--red-soft); color: var(--red-p); border-color: var(--red-p); transform: translateY(-2px); }
 
         /* Gallery */
-        .tab-wrap { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .tab-btn { padding: 10px 20px; border: 1px solid var(--border); background: #fff; border-radius: 8px; cursor: pointer; font-size: .88rem; font-weight: 700; transition: .2s; color: var(--slate-m); }
-        .tab-btn.active { background: var(--red-p); color: #fff; border-color: var(--red-p); box-shadow: 0 4px 12px rgba(185,28,28,0.2); }
-        .gal-item { background: #fff; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: .2s; box-shadow: var(--shadow); }
-        .gal-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: #fca5a5; }
-        .gal-thumb { width: 100%; height: 200px; object-fit: cover; background: #cbd5e1; display: block; }
-        .gal-meta { padding: 16px; }
-        .gal-tag { font-size: .7rem; font-weight: 800; color: var(--red-p); background: var(--red-soft); padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px; }
-        .gal-cap { font-size: .9rem; font-weight: 700; color: var(--slate-d); margin-bottom: 6px; line-height: 1.4; }
+        .tab-wrap { display: flex; justify-content: center; gap: 12px; margin-bottom: 35px; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 22px; border: 1px solid var(--border); background: var(--white); border-radius: 8px; cursor: pointer; font-size: .9rem; font-weight: 700; transition: all .2s; color: var(--slate-m); }
+        .tab-btn.active { background: var(--red-p); color: #fff; border-color: var(--red-p); box-shadow: 0 6px 16px rgba(185,28,28,0.2); transform: translateY(-2px); }
+        
+        .gal-item { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: all .3s; box-shadow: var(--shadow); }
+        .gal-item:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: var(--red-p); }
+        .gal-thumb { width: 100%; height: 220px; object-fit: cover; background: var(--canvas); display: block; transition: transform .5s ease; }
+        .gal-item:hover .gal-thumb { transform: scale(1.05); }
+        .gal-meta { padding: 18px; position: relative; background: var(--white); z-index: 2; }
+        .gal-tag { font-size: .7rem; font-weight: 800; color: var(--red-p); background: var(--red-soft); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 8px; }
+        .gal-cap { font-size: .95rem; font-weight: 700; color: var(--slate-d); margin-bottom: 6px; line-height: 1.4; }
         .gal-date { font-size: .75rem; color: var(--muted); display: block; }
 
+        /* FEATURE 3: Skeleton Loader for Gallery */
+        .skeleton-box { background: linear-gradient(90deg, var(--border) 25%, var(--canvas) 50%, var(--border) 75%); background-size: 200% 100%; animation: shimmerLoad 1.5s infinite; border-radius: 16px; height: 320px; width: 100%; border: 1px solid var(--border); }
+        @keyframes shimmerLoad { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
         /* Secure Staff Panel & Folders */
-        .staff-gate { background: #fff; border: 2px dashed #cbd5e1; border-radius: 12px; padding: 30px 20px; text-align: center; max-width: 650px; margin: 40px auto 0; }
-        .pin-flex { display: flex; gap: 10px; justify-content: center; max-width: 300px; margin: 16px auto 0; }
-        .pin-box { padding: 12px; border: 1px solid var(--border); border-radius: 8px; text-align: center; font-size: 1.2rem; letter-spacing: 4px; width: 150px; font-weight: 700; outline: none; transition: border .2s; }
-        .pin-box:focus { border-color: var(--red-p); }
+        .staff-gate { background: var(--white); border: 2px dashed var(--border); border-radius: 16px; padding: 35px 20px; text-align: center; max-width: 650px; margin: 50px auto 0; }
+        body:not(.dark-mode) .staff-gate { background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); border-color: #cbd5e1; }
         
-        .folders-section { margin-top: 20px; padding: 18px; background: #fff; border: 1px solid var(--border); border-radius: 10px; text-align: left; }
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
-        .folder-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: .2s; background: var(--canvas); }
-        .folder-card:hover { border-color: var(--red-p); background: #fff; transform: translateY(-2px); }
-        .folder-info { display: flex; align-items: center; gap: 10px; }
+        .folders-section { margin-top: 24px; padding: 20px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; text-align: left; }
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+        .folder-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all .2s; background: var(--canvas); }
+        .folder-card:hover { border-color: var(--red-p); background: var(--white); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(185,28,28,0.1); }
+        .folder-info { display: flex; align-items: center; gap: 12px; }
         .folder-icon { color: var(--red-p); display: flex; align-items: center; }
 
-        .btn-cta { background: var(--red-p); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: .9rem; cursor: pointer; transition: .2s; box-shadow: 0 4px 12px rgba(185,28,28,0.2); }
-        .btn-cta:hover { background: var(--red-dark); transform: translateY(-2px); }
+        .btn-cta { background: var(--red-p); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: .9rem; cursor: pointer; transition: all .2s; box-shadow: 0 4px 12px rgba(185,28,28,0.2); }
+        .btn-cta:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(185,28,28,0.3); }
+        
+        input, select, textarea { background: var(--canvas); color: var(--slate-d); border: 1px solid var(--border); outline: none; }
 
         /* Modals & Lightbox */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(5px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: #fff; border-radius: 16px; max-width: 700px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        .modal-head { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--canvas); }
-        .modal-body { padding: 20px; overflow-y: auto; }
-        .btn-close-modal { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--muted); line-height: 1; transition:.2s;}
+        .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: var(--white); border-radius: 20px; max-width: 700px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .modal-head { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--canvas); }
+        .modal-body { padding: 24px; overflow-y: auto; }
+        .btn-close-modal { background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--muted); line-height: 1; transition:.2s;}
         .btn-close-modal:hover { color: var(--red-p); }
         
-        .lightbox-box { background: transparent; max-width: 800px; width: 100%; text-align: center; position: relative; }
-        .lightbox-img { max-width: 100%; max-height: 75vh; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); object-fit: contain; background: #000; }
-        .lightbox-cap { color: #fff; margin-top: 16px; font-size: 1.1rem; font-weight: 700; }
-        .lightbox-meta { color: #fca5a5; font-size: .85rem; margin-top: 6px; }
-        .lightbox-close { position: absolute; top: -40px; right: 0; color: #fff; font-size: 2.5rem; background: none; border: none; cursor: pointer; line-height: 1; }
+        .lightbox-box { background: transparent; max-width: 900px; width: 100%; text-align: center; position: relative; }
+        .lightbox-img { max-width: 100%; max-height: 75vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); object-fit: contain; background: transparent; }
+        .lightbox-cap { color: #fff; margin-top: 18px; font-size: 1.15rem; font-weight: 700; }
+        .lightbox-meta { color: #fca5a5; font-size: .9rem; margin-top: 8px; }
+        .lightbox-close { position: absolute; top: -50px; right: 0; color: #fff; font-size: 2.5rem; background: none; border: none; cursor: pointer; line-height: 1; transition: .2s; }
+        .lightbox-close:hover { color: var(--red-p); transform: scale(1.1); }
+
+        /* FEATURE 4: Custom Toast Notification */
+        #toastContainer { position: fixed; bottom: 30px; right: 30px; z-index: 3000; display: flex; flex-direction: column; gap: 12px; pointer-events: none; }
+        .toast-msg { min-width: 280px; background: var(--white); color: var(--slate-d); padding: 16px 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-size: 0.95rem; font-weight: 700; border-left: 6px solid var(--red-p); display: flex; align-items: center; gap: 12px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); pointer-events: auto; }
+        .toast-msg.show { transform: translateX(0); }
+        .toast-msg.success { border-left-color: #16a34a; }
+        .toast-msg.error { border-left-color: #ef4444; }
+        .toast-icon { display: flex; align-items: center; justify-content: center; }
+        .toast-msg.success .toast-icon { color: #16a34a; }
+        .toast-msg.error .toast-icon { color: #ef4444; }
+
+        /* Floating Back to Top Button */
+        #backToTop { position: fixed; bottom: 30px; right: 30px; background: var(--red-p); color: #fff; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(185,28,28,0.4); opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 900; border: none; cursor: pointer; transform: translateY(20px); }
+        #backToTop.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        #backToTop:hover { background: var(--slate-d); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0, 0.3); }
 
         /* Footer */
-        footer { background: var(--slate-d); color: #94a3b8; padding: 60px 0 24px; border-top: 4px solid var(--red-p); font-size: .88rem; }
-        .ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-        .ft-col h4 { color: #fff; font-size: 1.05rem; font-weight: 800; margin-bottom: 16px; letter-spacing: 0.5px; }
-        .ft-link { color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; transition: .2s; }
-        .ft-link:hover { color: #fca5a5; transform: translateX(3px); }
+        footer { background: #0f172a; color: #94a3b8; padding: 70px 0 24px; border-top: 4px solid var(--red-p); font-size: .9rem; position: relative; z-index: 10; }
+        .ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; margin-bottom: 50px; }
+        .ft-col h4 { color: #fff; font-size: 1.1rem; font-weight: 800; margin-bottom: 20px; letter-spacing: 0.5px; }
+        .ft-link { color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; transition: all .2s; }
+        .ft-link:hover { color: #fca5a5; transform: translateX(5px); }
 
-        /* Responsive Breakpoints */
+        /* Responsive UI/UX Optimization */
         @media (max-width: 992px) {
             .portal-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-2 { grid-template-columns: 1fr; }
+            .tilt-card { transform: none !important; transition: none !important; }
         }
 
         @media (max-width: 768px) {
             .nav-toggle { display: block; }
-            .nav-links {
-                display: none; position: absolute; top: 100%; left: 0; right: 0;
-                background: #ffffff; flex-direction: column; align-items: stretch;
-                padding: 16px 20px; gap: 12px; border-bottom: 2px solid var(--border);
-                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); flex-direction: column; align-items: stretch; padding: 16px 20px; gap: 12px; border-bottom: 2px solid var(--border); box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
             .nav-links.active { display: flex; }
-            .nav-links a { padding: 12px 0; border-bottom: 1px solid var(--canvas); font-size: 1rem; }
+            .nav-links a { padding: 14px 0; border-bottom: 1px solid var(--canvas); font-size: 1.05rem; }
             .btn-nav-tools { text-align: center; padding: 14px !important; margin-top: 10px; }
 
-            .hero { padding: 40px 16px 60px; }
-            .hero h1 { font-size: 1.8rem; }
-            
-            .portal-grid { grid-template-columns: 1fr; }
-            .portals-wrap { margin-top: -20px; }
-
-            .grid-2, .ft-grid { grid-template-columns: 1fr; gap: 20px; }
-            .sec-title { font-size: 1.5rem; }
-            
-            input, select, textarea { font-size: 16px !important; /* Mencegah auto-zoom di iOS */ }
+            .hero { padding: 50px 16px 70px; }
+            .hero h1 { font-size: 2rem; }
+            .portal-grid { grid-template-columns: 1fr; gap: 16px;}
+            .portals-wrap { margin-top: -25px; }
+            .ft-grid { grid-template-columns: 1fr; gap: 30px; }
+            .sec-title { font-size: 1.6rem; }
+            input, select, textarea { font-size: 16px !important; }
+            #toastContainer { bottom: 20px; right: 20px; left: 20px; align-items: stretch; }
+            .toast-msg { min-width: auto; }
+            #backToTop { bottom: 20px; right: 20px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Corporate Splash Screen Preloader -->
+    <div id="preloader">
+        <div class="loader-logo">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            KBRU PALU
+        </div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="progressBar"></div>
+
+    <!-- Dynamic Background Blobs -->
+    <div class="bg-dynamic">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <div class="nav-wrap">
             <a href="#beranda" class="brand">PT KBRU <span class="badge-branch">PALU</span></a>
-            <button class="nav-toggle" id="menuToggle" aria-label="Open Navigation">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <!-- Dark Mode Toggle Button -->
+                <button class="btn-theme-toggle" id="darkModeToggle" aria-label="Toggle Dark Mode">
+                    <svg id="moonIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <svg id="sunIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                </button>
+                <button class="nav-toggle" id="menuToggle" aria-label="Open Navigation">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
             <ul class="nav-links" id="navMenu">
                 <li><a href="#profil" onclick="closeNav()">Profile</a></li>
                 <li><a href="#visimisi" onclick="closeNav()">Vision</a></li>
                 <li><a href="#tim" onclick="closeNav()">Team</a></li>
                 <li><a href="#galeri" onclick="closeNav()">Archive</a></li>
-                <!-- Tombol Navigasi ini diarahkan ke #portals yang berisi kelima link/alat tersebut -->
                 <li><a href="#portals" onclick="closeNav()" class="btn-nav-tools">KBRU Palu Tools &rarr;</a></li>
             </ul>
         </div>
     </nav>
 
     <!-- Hero Header -->
-    <section class="hero" id="beranda">
+    <section class="hero reveal" id="beranda">
         <h1>Independent Insurance Broker & Consultant</h1>
-        <p>Your trusted risk mitigation and insurance advisory partner in Central Sulawesi. One Platform for All KBRU Palu Operational and Marketing Needs.</p>
+        <p id="heroText"></p>
     </section>
 
-    <!-- KBRU Palu Tools (Portals & Tools) -->
-    <div class="container portals-wrap" id="portals">
-        <div class="portal-grid">
+    <!-- KBRU Palu Tools (Portals) - Public View, Locked Links -->
+    <div class="container portals-wrap reveal" id="portals">
+        <div class="portal-grid" id="portalGrid">
             
-            <!-- Tool 1: Calculator -->
-            <div class="portal-card animate-fade" style="animation-delay: 0.1s;">
+            <!-- Tool 1: Daily Dashboard -->
+            <div class="portal-card tilt-card">
+                <div class="portal-head">
+                    <div class="portal-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    </div>
+                    <span class="badge-type badge-dashboard">Internal SPV/BM</span>
+                </div>
+                <h3 class="portal-title">Daily Dashboard & Pipeline</h3>
+                <p class="portal-desc">Membantu Marketing mencatat dan melaporkan kinerja harian, manajemen pipeline, closing. Juga menjadi dashboard monitoring bagi SPV & Branch Manager.<br><i style="color: #16a34a; font-size:0.8rem;">*Disarankan via Google Chrome.</i></p>
+                <button onclick="openToolPin('https://script.google.com/macros/s/AKfycbyNeAqm16TB_5EcScYoVcpexKwizSvBGBexFMlbZkcFSqxu0HIWAQJF_0i7eplBWcIN/exec')" class="btn-portal">
+                    Lihat Dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+
+            <!-- Tool 2: Form Pengajuan & Kalkulator -->
+            <div class="portal-card tilt-card">
                 <div class="portal-head">
                     <div class="portal-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg>
                     </div>
-                    <span class="badge-type badge-public">Public / Klien</span>
+                    <span class="badge-type badge-kalkulator">Public / Klien</span>
                 </div>
-                <h3 class="portal-title">Kalkulator Premi & Pengajuan</h3>
-                <p class="portal-desc">Tools menghitung estimasi premi. Jika klien tertarik collect data lalu masukkan ke form pengajuan, maka secara real-time langsung diterima by sistem oleh admin untuk diproses ke asuransi.<br>
-<i style="color: red;">Kalkulator belum mencakup semua LOB.</i></p>
-                <a href="https://valentinoalex19.github.io/web-konsultan-palu/" target="_blank" class="btn-portal">
+                <h3 class="portal-title">Form Pengajuan dan Kalkulator Premi</h3>
+                <p class="portal-desc">Tools menghitung estimasi premi. Jika klien tertarik, masukkan ke form pengajuan untuk real-time diproses ke asuransi oleh admin.<br><i style="color: #ef4444; font-size:0.8rem;">*Kalkulator belum mencakup semua LOB.</i></p>
+                <button onclick="openToolPin('https://valentinoalex19.github.io/web-konsultan-palu/')" class="btn-portal">
                     Buka Kalkulator <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
+                </button>
             </div>
 
-            <!-- Tool 2: Claim Portal -->
-            <div class="portal-card animate-fade" style="animation-delay: 0.2s;">
+            <!-- Tool 3: Claim Portal -->
+            <div class="portal-card tilt-card">
                 <div class="portal-head">
                     <div class="portal-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
@@ -233,61 +394,58 @@
                     <span class="badge-type badge-internal">Internal</span>
                 </div>
                 <h3 class="portal-title">Portal Klaim Terintegrasi</h3>
-                <p class="portal-desc">Pusat rekapan, pengarsipan data klaim (foto, dokumen) secara terstruktur, dan pembuatan pelaporan klaim (PDF) KBRU Palu.<br>
-<i style="color: green;">Disarankan buka website dengan Google Chrome.</i></p>
-                <a href="https://script.google.com/macros/s/AKfycbx838OB_nki06ZZMroAafHlUTnWsjJKPiKF0Y_OEC4Jt5-UgY4511_lDoi4gbs9Niq3JA/exec" target="_blank" class="btn-portal">
+                <p class="portal-desc">Pusat rekapan, pengarsipan data klaim (foto, dokumen) secara terstruktur, dan pembuatan pelaporan klaim (PDF) KBRU Palu.<br><i style="color: #16a34a; font-size:0.8rem;">*Disarankan via Google Chrome.</i></p>
+                <button onclick="openToolPin('https://script.google.com/macros/s/AKfycbxgDPhWY_G_Ql99L5wEjepHq0FugxCp38je22urEAypV-Rb_XYlL7-IvwASJiBWo3ALFA/exec')" class="btn-portal">
                     Buka Portal Klaim <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
-            </div>
-
-            <!-- Tool 3: Daily Dashboard -->
-            <div class="portal-card animate-fade" style="animation-delay: 0.3s;">
-                <div class="portal-head">
-                    <div class="portal-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
-                    </div>
-                    <span class="badge-type badge-internal">Internal SPV/BM</span>
-                </div>
-                <h3 class="portal-title">Daily Dashboard & Pipeline</h3>
-                <p class="portal-desc">Membantu Marketing mencatat dan melaporkan kinerja harian, manajemen pipeline, closing. Juga menjadi dashboard monitoring bagi SPV & Branch Manager.<br>
-<i style="color: green;">Disarankan buka website dengan Google Chrome.</i></p>
-                <a href="https://script.google.com/macros/s/AKfycbzuNfWd-MvdTzQkQL89hea3018Z8sFJkcZRwK8QGjGfIgmb1m6iz5oTpRFcTUWu11M1/exec" target="_blank" class="btn-portal">
-                    Lihat Dashboard <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
+                </button>
             </div>
 
             <!-- Tool 4: AI Document Comparison -->
-            <div class="portal-card animate-fade" style="animation-delay: 0.4s;">
+            <div class="portal-card tilt-card">
                 <div class="portal-head">
-                    <div class="portal-icon" style="background:#fef08a; color:#b45309;">
+                    <div class="portal-icon" style="background:var(--badge-ai-bg, #fef08a); color:var(--badge-ai-text, #b45309);">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                     </div>
-                    <span class="badge-type badge-ai">INTERNAL.GEMINI AI</span>
+                    <span class="badge-type badge-ai">Internal Gemini AI</span>
                 </div>
                 <h3 class="portal-title">AI Document Comparison</h3>
                 <p class="portal-desc">Bandingkan isi dokumen (Quotation, Cover Note, Polis) secara cepat menggunakan AI Gemini sebagai insight sekunder tim marketing.</p>
-                <a href="https://kbru-insurance-tools-production.up.railway.app/" target="_blank" class="btn-portal">
+                <button onclick="openToolPin('https://kbru-insurance-tools-production.up.railway.app/')" class="btn-portal">
                     Mulai Komparasi AI <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </a>
+                </button>
             </div>
-
 
         </div>
     </div>
 
+    <!-- Modal PIN Khusus Tools -->
+    <div class="modal-overlay" id="toolPinModal" onclick="closeToolPinModal(event)">
+        <div class="tools-gate-box" onclick="event.stopPropagation()">
+            <button class="btn-close-modal" style="position:absolute; top:12px; right:16px; font-size:1.8rem;" onclick="document.getElementById('toolPinModal').style.display='none'">&times;</button>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 12px; display:block;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            <h3>Internal Access Restricted</h3>
+            <p>Masukkan 6 digit PIN Akses Tim untuk membuka KBRU Tools.</p>
+            <div class="pin-input-group">
+                <input type="password" id="internalToolsPin" maxlength="6" placeholder="••••••" onkeyup="if(event.key === 'Enter') verifyToolPin()">
+                <button class="btn-unlock" onclick="verifyToolPin()">Buka</button>
+            </div>
+            <p id="toolsErrorMsg" style="color:#ef4444; font-size:0.85rem; font-weight:700; margin-top:16px; display:none;">PIN Salah! Akses ditolak.</p>
+        </div>
+    </div>
+
     <!-- Profile & History -->
-    <section id="profil" style="background:#fff;">
-        <div class="container">
+    <section id="profil">
+        <div class="container reveal">
             <div class="sec-head">
                 <span class="sec-tag">About Us</span>
                 <h2 class="sec-title">Our Dedication</h2>
             </div>
             <div class="grid-2">
-                <div class="card">
+                <div class="card tilt-card">
                     <h3 style="color:var(--red-p); margin-bottom:12px; font-size:1.2rem;">The History of KBRU Palu Branch</h3>
                     <p style="font-size:.95rem; line-height:1.7;">Established in 2020, PT Kalibesar Raya Utama (KBRU) Palu Branch represents a strategic expansion to provide professional insurance broking services across Palu City and Central Sulawesi. Located on the 3rd floor of Bank Sinarmas, the branch is dedicated to assisting individual clients, corporations, and financial institutions with tailored insurance solutions and risk mitigation.</p>
                 </div>
-                <div class="card">
+                <div class="card tilt-card">
                     <h3 style="color:var(--red-p); margin-bottom:12px; font-size:1.2rem;">Independent Licensed Broker</h3>
                     <p style="font-size:.95rem; line-height:1.7;">As an independent insurance broker, KBRU Palu represents the interests of our clients (the insured). We provide comprehensive support throughout the entire lifecycle—from risk management and policy clause structuring to administrative handling and claim advocacy—ensuring fair, objective, and prompt claim settlements.</p>
                 </div>
@@ -296,18 +454,18 @@
     </section>
 
     <!-- Vision & Mission -->
-    <section id="visimisi" style="background:var(--canvas);">
-        <div class="container">
+    <section id="visimisi">
+        <div class="container reveal">
             <div class="sec-head">
                 <span class="sec-tag">Strategic Commitment</span>
                 <h2 class="sec-title">Our Vision and Mission</h2>
             </div>
             <div class="grid-2">
-                <div class="card" style="border-top: 4px solid var(--red-p);">
+                <div class="card tilt-card" style="border-top: 4px solid var(--red-p);">
                     <h4 style="font-size:1.1rem; margin-bottom:10px; color:var(--slate-d);">OUR VISION</h4>
                     <p style="font-size:.95rem;">To be a leading, trusted and respected insurance broker and consultant with support from global networks.</p>
                 </div>
-                <div class="card" style="border-top: 4px solid var(--red-p);">
+                <div class="card tilt-card" style="border-top: 4px solid var(--red-p);">
                     <h4 style="font-size:1.1rem; margin-bottom:10px; color:var(--slate-d);">OUR MISSION</h4>
                     <ul style="padding-left:18px; font-size:.95rem; line-height: 1.6;">
                         <li style="margin-bottom: 8px;">Always provide proper and innovative insurance coverage, at reasonable price, best terms and conditions, with added value, according to customer's needs and the development of the global insurance market.</li>
@@ -320,8 +478,8 @@
     </section>
 
     <!-- Team Members -->
-    <section id="tim" style="background:#fff;">
-        <div class="container">
+    <section id="tim">
+        <div class="container reveal">
             <div class="sec-head">
                 <span class="sec-tag">Our Team</span>
                 <h2 class="sec-title">KBRU Palu Professional Team</h2>
@@ -331,12 +489,12 @@
     </section>
 
     <!-- Gallery & Archive -->
-    <section id="galeri" style="background:var(--canvas);">
-        <div class="container">
+    <section id="galeri">
+        <div class="container reveal">
             <div class="sec-head">
                 <span class="sec-tag">Our Journey</span>
                 <h2 class="sec-title">Activity Gallery & Archive</h2>
-                <p style="font-size:0.9rem; color:var(--muted); margin-top:8px;">Displaying recent documentation. Click image for full preview.</p>
+                <p style="font-size:0.95rem; color:var(--muted); margin-top:8px;">Displaying recent documentation. Click image for full preview.</p>
             </div>
             
             <div class="tab-wrap">
@@ -347,14 +505,16 @@
             </div>
 
             <!-- Public Showcase -->
-            <div class="grid-cards" id="galleryContainer"></div>
+            <div class="grid-cards" id="galleryContainer">
+                <!-- SKELETON LOADER akan diisi Javascript saat fetching -->
+            </div>
 
             <!-- Secure Staff Panel -->
-            <div class="staff-gate">
-                <strong style="color:var(--slate-d); font-size:1rem; display:block; margin-bottom:6px;">Internal Staff Portal</strong>
-                <p style="color:var(--muted); font-size:.85rem;">Enter your internal authorization PIN to access directories, upload files, or manage team profiles:</p>
+            <div class="staff-gate reveal">
+                <strong style="color:var(--slate-d); font-size:1.1rem; display:block; margin-bottom:6px;">Internal Staff Content Manager</strong>
+                <p style="color:var(--muted); font-size:.9rem;">Enter authorization PIN (Gallery Manager) to upload files or manage profiles:</p>
                 <div class="pin-flex" id="pinBoxWrap">
-                    <input type="password" id="staffPin" class="pin-box" placeholder="••••••" maxlength="8">
+                    <input type="password" id="staffPin" class="pin-box" placeholder="••••••" maxlength="8" onkeyup="if(event.key === 'Enter') verifyPIN()">
                     <button class="btn-cta" onclick="verifyPIN()">Unlock</button>
                 </div>
                 <div id="uploadGateContainer"></div>
@@ -364,13 +524,13 @@
 
     <!-- Folder Modal Drawer -->
     <div class="modal-overlay" id="folderModal" onclick="closeFolderModal(event)">
-        <div class="modal-box">
+        <div class="modal-box" onclick="event.stopPropagation()">
             <div class="modal-head">
                 <strong id="modalFolderTitle" style="font-size:1.1rem; color:var(--slate-d);">Directory Folder</strong>
                 <button class="btn-close-modal" onclick="document.getElementById('folderModal').style.display='none'">&times;</button>
             </div>
-            <div style="padding:16px 24px; border-bottom:1px solid var(--border);">
-                <input type="text" id="searchFolderInput" placeholder="Search items in this folder..." oninput="filterFolderList()" style="width:100%; padding:12px 16px; font-size:1rem; border:1px solid var(--border); border-radius:8px; outline:none;">
+            <div style="padding:20px 24px; border-bottom:1px solid var(--border);">
+                <input type="text" id="searchFolderInput" placeholder="Search items in this folder..." oninput="filterFolderList()" style="width:100%; padding:14px 18px; font-size:1rem; border:1px solid var(--border); border-radius:8px; outline:none;">
             </div>
             <div class="modal-body" id="modalFolderList"></div>
         </div>
@@ -378,7 +538,7 @@
 
     <!-- Lightbox Modal -->
     <div class="modal-overlay" id="lightboxModal" onclick="closeLightbox(event)">
-        <div class="lightbox-box">
+        <div class="lightbox-box" onclick="event.stopPropagation()">
             <button class="lightbox-close" onclick="document.getElementById('lightboxModal').style.display='none'">&times;</button>
             <img src="" id="lightboxImg" class="lightbox-img" alt="Preview">
             <div class="lightbox-cap" id="lightboxCap"></div>
@@ -386,14 +546,22 @@
         </div>
     </div>
 
+    <!-- Floating Back to Top Button -->
+    <button id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Back to top">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
+
+    <!-- Custom Toast Container -->
+    <div id="toastContainer"></div>
+
     <!-- Footer -->
     <footer id="kontak">
-        <div class="container">
+        <div class="container reveal">
             <div class="ft-grid">
                 <div class="ft-col">
                     <h4>KBRU Palu Branch Office</h4>
                     <p style="line-height:1.7; margin-bottom:16px;">Bank Sinarmas, Jl. Masjid Raya No.10 Lt. 3, Lolu Utara, Palu Selatan, Kota Palu, Sulawesi Tengah 94111.</p>
-                    <a href="https://www.google.com/maps/place/KANTOR+PT+KALIBESAR+RAYA+UTAMA+(KBRU)+CABANG+PALU/@-0.899884,119.8717967,805m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2d8bed00104797e1:0x87af506d52f40c06!8m2!3d-0.8998894!4d119.8743716!16s%2Fg%2F11xg7f383m" target="_blank" class="btn-portal" style="background:rgba(255,255,255,.05); color:#fff; border-color:rgba(255,255,255,.1); width:max-content; padding: 10px 16px;">
+                    <a href="https://www.google.com/maps/place/KANTOR+PT+KALIBESAR+RAYA+UTAMA+(KBRU)+CABANG+PALU/@-0.899884,119.8717967,805m/data=!3m2!1e3!4b1!4m6!3m5!1s0x2d8bed00104797e1:0x87af506d52f40c06!8m2!3d-0.8998894!4d119.8743716!16s%2Fg%2F11xg7f383m" target="_blank" class="btn-portal" style="background:rgba(255,255,255,.05); color:#fff; border-color:rgba(255,255,255,.1); width:max-content; padding: 10px 18px;">
                         Buka Google Maps &rarr;
                     </a>
                 </div>
@@ -416,10 +584,168 @@
         </div>
     </footer>
 
-    <!-- Interactive Script LENGKAP UTUH (Team Profile, Upload Gallery, Hapus, Edit) -->
+    <!-- INTERACTIVE SCRIPT -->
     <script>
-        const GALLERY_API_URL = "https://script.google.com/macros/s/AKfycbw6HRCDP_lN0qbiDc8k5DB_OR5765flNOKjWFqkEp1yOVtb6dcpNbmGKfHoB3mD1QVJjw/exec";
+        // --- 1. Preloader (Splash Screen) Logic ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('preloader').classList.add('hide');
+            }, 600); // Tahan 0.6 detik agar animasi splash screen terlihat berkelas
+        });
 
+        // --- 2. Custom Toast Notification System ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast-msg ${type}`;
+            
+            const iconSvg = type === 'success' 
+                ? `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 12l2 2 4-4"/></svg>`
+                : `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+            
+            toast.innerHTML = `<div class="toast-icon">${iconSvg}</div><span>${message}</span>`;
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Remove after 3.5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        // --- 3. Scroll Progress Bar & Back to Top Logic ---
+        const backToTopBtn = document.getElementById("backToTop");
+        const progressBar = document.getElementById("progressBar");
+
+        window.addEventListener("scroll", () => {
+            // Logika Back to Top
+            if (window.scrollY > 350) backToTopBtn.classList.add("show");
+            else backToTopBtn.classList.remove("show");
+
+            // Logika Scroll Progress Bar
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+
+        // --- 4. Dark Mode Toggle System ---
+        const themeBtn = document.getElementById('darkModeToggle');
+        const moonIcon = document.getElementById('moonIcon');
+        const sunIcon = document.getElementById('sunIcon');
+        
+        // Cek LocalStorage
+        if (localStorage.getItem('kbru_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            moonIcon.style.display = 'none';
+            sunIcon.style.display = 'block';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('kbru_theme', 'dark');
+                moonIcon.style.display = 'none';
+                sunIcon.style.display = 'block';
+            } else {
+                localStorage.setItem('kbru_theme', 'light');
+                moonIcon.style.display = 'block';
+                sunIcon.style.display = 'none';
+            }
+        });
+
+        // --- 5. Reveal on Scroll Animation ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- 6. 3D Hover Tilt Effect ---
+        function initTiltEffect() {
+            const cards = document.querySelectorAll('.tilt-card');
+            cards.forEach(card => {
+                // Efek kursor di Laptop / PC
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const rotateX = (((y - rect.height / 2) / (rect.height / 2)) * -14).toFixed(2); 
+                    const rotateY = (((x - rect.width / 2) / (rect.width / 2)) * 14).toFixed(2);
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                    card.style.transition = `transform 0.5s ease`;
+                });
+
+                card.addEventListener('mouseenter', () => card.style.transition = `none`);
+
+                // Efek kedalaman 3D saat ditekan di layar HP / Tablet
+                card.addEventListener('touchstart', () => {
+                    card.style.transform = `perspective(1000px) scale3d(0.97, 0.97, 0.97)`;
+                    card.style.transition = `transform 0.15s ease`;
+                });
+                card.addEventListener('touchend', () => {
+                    card.style.transform = `perspective(1000px) scale3d(1, 1, 1)`;
+                    card.style.transition = `transform 0.3s ease`;
+                });
+            });
+        }
+
+        // --- 7. Typewriter Effect Hero Text (Looping) ---
+        const textArray = "Your trusted risk mitigation and insurance advisory partner in Central Sulawesi. One Platform for All KBRU Palu Operational and Marketing Needs.";
+        let textPosition = 0;
+        const typeSpeed = 40; 
+        const delayBetweenLoops = 15000; 
+
+        function typeWriter() {
+            if (textPosition < textArray.length) {
+                document.getElementById("heroText").innerHTML += textArray.charAt(textPosition);
+                textPosition++;
+                setTimeout(typeWriter, typeSpeed);
+            } else {
+                setTimeout(() => {
+                    document.getElementById("heroText").innerHTML = ""; 
+                    textPosition = 0; 
+                    typeWriter(); 
+                }, delayBetweenLoops);
+            }
+        }
+        window.addEventListener('load', () => setTimeout(typeWriter, 1200));
+
+        // --- 8. Security PIN For Tools Modal ---
+        let targetToolUrl = '';
+        function openToolPin(url) {
+            targetToolUrl = url;
+            document.getElementById('internalToolsPin').value = '';
+            document.getElementById('toolsErrorMsg').style.display = 'none';
+            document.getElementById('toolPinModal').style.display = 'flex';
+            document.getElementById('internalToolsPin').focus();
+        }
+
+        function verifyToolPin() {
+            const input = document.getElementById('internalToolsPin').value.trim();
+            const errorMsg = document.getElementById('toolsErrorMsg');
+            if (input === "811825") {
+                document.getElementById('toolPinModal').style.display = 'none';
+                window.open(targetToolUrl, '_blank'); 
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('internalToolsPin').value = '';
+                showToast("PIN Akses KBRU Tools Salah!", "error"); // Implementasi Toast
+            }
+        }
+
+        function closeToolPinModal(e) {
+            if (!e || e.target.id === 'toolPinModal') document.getElementById('toolPinModal').style.display = 'none';
+        }
+
+        // --- 9. Navigation Setup ---
+        const GALLERY_API_URL = "https://script.google.com/macros/s/AKfycbw6HRCDP_lN0qbiDc8k5DB_OR5765flNOKjWFqkEp1yOVtb6dcpNbmGKfHoB3mD1QVJjw/exec";
         const menuToggle = document.getElementById('menuToggle');
         const navMenu = document.getElementById('navMenu');
 
@@ -432,7 +758,7 @@
             web: `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`
         };
 
-        // 1. Team Members Data
+        // --- 10. Team Members Data ---
         let TEAM = JSON.parse(localStorage.getItem('kbru_team_data')) || [
             { name: "Lucia Theodora Worotikan", role: "Branch Manager", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=160&q=80", ig: "#", li: "#", web: "#" },
             { name: "Shelly Octaviani", role: "Supervisor (SPV)", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=160&q=80", ig: "#", li: "#", web: "#" },
@@ -444,7 +770,7 @@
 
         function renderTeam() {
             document.getElementById('teamContainer').innerHTML = TEAM.map(m => `
-                <div class="card team-card animate-fade">
+                <div class="card team-card tilt-card animate-fade">
                     <div class="avatar-wrap"><img src="${m.img}" alt="${m.name}" class="avatar-img"></div>
                     <div class="team-meta">
                         <h4>${m.name}</h4>
@@ -452,17 +778,19 @@
                         <div class="social-box">
                             <a href="${m.ig}" class="icon-btn" target="_blank" title="Instagram">${ICONS.ig}</a>
                             <a href="${m.li}" class="icon-btn" target="_blank" title="LinkedIn">${ICONS.li}</a>
-                            <a href="${m.web}" class="icon-btn" target="_blank" title="Portfolio Website">${ICONS.web}</a>
+                            <a href="${m.web}" class="icon-btn" target="_blank" title="Portfolio">${ICONS.web}</a>
                         </div>
                     </div>
                 </div>
             `).join('');
+            initTiltEffect(); 
         }
         renderTeam();
 
-        // 2. Gallery Data & Rendering
+        // --- 11. Gallery Rendering & Skeleton State ---
         let activeCategory = 'all';
         let isStaffAuthorized = false;
+        let isFetchingGallery = true; // State penanda loading
         let ALL_GALLERIES = [
             { id: "local-1", cat: "kegiatan", tag: "Activities & HUT", cap: "Documentation of KBRU anniversary celebration with Palu branch team.", timeStr: "Archive Document", img: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=500&q=80" },
             { id: "local-2", cat: "closing", tag: "Client Closing", cap: "Commercial warehouse & logistics asset insurance policy closing in Palu.", timeStr: "Archive Document", img: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=500&q=80" },
@@ -471,24 +799,27 @@
 
         function getShowcaseItems(cat) {
             if (cat === 'all') {
-                const kList = ALL_GALLERIES.filter(g => g.cat === 'kegiatan').slice(0, 3);
-                const cList = ALL_GALLERIES.filter(g => g.cat === 'closing').slice(0, 3);
-                const sList = ALL_GALLERIES.filter(g => g.cat === 'sertifikat').slice(0, 3);
-                return [...kList, ...cList, ...sList];
+                return [...ALL_GALLERIES.filter(g => g.cat === 'kegiatan').slice(0, 3), ...ALL_GALLERIES.filter(g => g.cat === 'closing').slice(0, 3), ...ALL_GALLERIES.filter(g => g.cat === 'sertifikat').slice(0, 3)];
             } else {
                 return ALL_GALLERIES.filter(g => g.cat === cat).slice(0, 3);
             }
         }
 
         function renderShowcase() {
-            const items = getShowcaseItems(activeCategory);
             const box = document.getElementById('galleryContainer');
             
-            if (!items.length) {
-                box.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--muted); font-size:0.86rem;">No photo files available in this category.</div>`;
+            // FEATURE: Render Skeleton Loader saat menunggu data
+            if (isFetchingGallery) {
+                box.innerHTML = `<div class="skeleton-box"></div><div class="skeleton-box"></div><div class="skeleton-box"></div>`;
                 return;
             }
 
+            const items = getShowcaseItems(activeCategory);
+            if (!items.length) {
+                box.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px; color:var(--muted); font-size:0.9rem;">No photo files available in this category.</div>`;
+                return;
+            }
+            
             box.innerHTML = items.map(g => `
                 <div class="gal-item animate-fade" onclick="openLightbox('${g.img}', '${g.cap.replace(/'/g, "\\'")}', '${g.tag}', '${g.timeStr}')">
                     <img src="${g.img}" class="gal-thumb" alt="${g.tag}" loading="lazy">
@@ -499,7 +830,6 @@
                     </div>
                 </div>
             `).join('');
-
             if (isStaffAuthorized) updateFolderCounts();
         }
 
@@ -514,65 +844,58 @@
             const kCount = ALL_GALLERIES.filter(g => g.cat === 'kegiatan').length;
             const cCount = ALL_GALLERIES.filter(g => g.cat === 'closing').length;
             const sCount = ALL_GALLERIES.filter(g => g.cat === 'sertifikat').length;
-            
-            const elK = document.getElementById('cnt-kegiatan');
-            const elC = document.getElementById('cnt-closing');
-            const elS = document.getElementById('cnt-sertifikat');
-            
-            if (elK) elK.innerText = `${kCount} Files`;
-            if (elC) elC.innerText = `${cCount} Files`;
-            if (elS) elS.innerText = `${sCount} Files`;
+            if (document.getElementById('cnt-kegiatan')) document.getElementById('cnt-kegiatan').innerText = `${kCount} Files`;
+            if (document.getElementById('cnt-closing')) document.getElementById('cnt-closing').innerText = `${cCount} Files`;
+            if (document.getElementById('cnt-sertifikat')) document.getElementById('cnt-sertifikat').innerText = `${sCount} Files`;
         }
 
         function loadGalleryFromDrive() {
-            if (!GALLERY_API_URL || GALLERY_API_URL.includes("xxxxxxx")) return;
-            fetch(GALLERY_API_URL)
-                .then(res => res.json())
-                .then(driveFiles => {
-                    if (driveFiles && driveFiles.length > 0) {
-                        ALL_GALLERIES = [...driveFiles, ...ALL_GALLERIES];
-                        renderShowcase();
-                    }
-                })
-                .catch(err => console.log("Waiting for Drive sync:", err));
+            if (!GALLERY_API_URL || GALLERY_API_URL.includes("xxxxxxx")) {
+                isFetchingGallery = false;
+                renderShowcase();
+                return;
+            }
+            
+            fetch(GALLERY_API_URL).then(res => res.json()).then(driveFiles => {
+                if (driveFiles && driveFiles.length > 0) { 
+                    ALL_GALLERIES = [...driveFiles, ...ALL_GALLERIES]; 
+                }
+            }).catch(err => {
+                console.log("Waiting for Drive sync...");
+            }).finally(() => {
+                isFetchingGallery = false; // Matikan skeleton setelah fetch selesai
+                renderShowcase();
+            });
         }
-        renderShowcase();
+        
+        // Panggil render skeleton pertama kali, lalu mulai fetch data
+        renderShowcase(); 
         loadGalleryFromDrive();
 
-        // 3. Lightbox Modal
+        // --- 12. Lightbox Modal ---
         function openLightbox(src, cap, tag, timeStr) {
             document.getElementById('lightboxImg').src = src;
             document.getElementById('lightboxCap').innerText = cap;
             document.getElementById('lightboxMeta').innerText = `${tag} • ${timeStr}`;
             document.getElementById('lightboxModal').style.display = 'flex';
         }
-
         function closeLightbox(e) {
-            if (!e || e.target.id === 'lightboxModal') {
-                document.getElementById('lightboxModal').style.display = 'none';
-            }
+            if (!e || e.target.id === 'lightboxModal') document.getElementById('lightboxModal').style.display = 'none';
         }
 
-        // 4. Folder Modal Management
+        // --- 13. Folder Management ---
         let activeFolderCat = '';
         function openFolderModal(cat) {
             if (!isStaffAuthorized) return;
             activeFolderCat = cat;
-            const titles = {
-                kegiatan: 'Directory: 1. Activities & HUT',
-                closing: 'Directory: 2. Client Closing',
-                sertifikat: 'Directory: 3. Certifications & License'
-            };
+            const titles = { kegiatan: 'Directory: 1. Activities & HUT', closing: 'Directory: 2. Client Closing', sertifikat: 'Directory: 3. Certifications & License' };
             document.getElementById('modalFolderTitle').innerText = titles[cat];
             document.getElementById('searchFolderInput').value = '';
             renderFolderList();
             document.getElementById('folderModal').style.display = 'flex';
         }
-
         function closeFolderModal(e) {
-            if (!e || e.target.id === 'folderModal') {
-                document.getElementById('folderModal').style.display = 'none';
-            }
+            if (!e || e.target.id === 'folderModal') document.getElementById('folderModal').style.display = 'none';
         }
 
         function renderFolderList() {
@@ -580,165 +903,125 @@
             const list = ALL_GALLERIES.filter(g => g.cat === activeFolderCat && g.cap.toLowerCase().includes(query));
             const box = document.getElementById('modalFolderList');
 
-            if (!list.length) {
-                box.innerHTML = `<div style="text-align:center; padding:30px; color:var(--muted); font-size:0.85rem;">No matching files found in this folder.</div>`;
-                return;
-            }
-
+            if (!list.length) { box.innerHTML = `<div style="text-align:center; padding:30px; color:var(--muted);">No files found.</div>`; return; }
             box.innerHTML = list.map(item => `
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border); gap:10px;">
                     <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
-                        <img src="${item.img}" style="width:44px; height:44px; min-width:44px; object-fit:cover; border-radius:6px; background:#cbd5e1;" loading="lazy">
+                        <img src="${item.img}" style="width:50px; height:50px; object-fit:cover; border-radius:8px;">
                         <div style="overflow:hidden;">
-                            <strong style="font-size:0.84rem; color:var(--slate-d); display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${item.cap}</strong>
-                            <span style="font-size:0.72rem; color:var(--muted);">${item.timeStr}</span>
+                            <strong style="font-size:0.9rem; color:var(--slate-d); display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${item.cap}</strong>
+                            <span style="font-size:0.75rem; color:var(--muted);">${item.timeStr}</span>
                         </div>
                     </div>
-                    <div style="display:flex; gap:6px; align-items:center; flex-shrink:0;">
-                        <button class="btn-cta" style="padding:6px 10px; font-size:0.74rem;" onclick="openLightbox('${item.img}', '${item.cap.replace(/'/g, "\\'")}', '${item.tag}', '${item.timeStr}')">View</button>
+                    <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+                        <button class="btn-cta" style="padding:8px 12px; font-size:0.75rem;" onclick="openLightbox('${item.img}', '${item.cap.replace(/'/g, "\\'")}', '${item.tag}', '${item.timeStr}')">View</button>
                         ${item.id && !item.id.startsWith('local-') ? `
-                            <button onclick="requestDeleteFile('${item.id}', '${item.cap.replace(/'/g, "\\'")}')" style="background:#ef4444; color:#fff; border:none; border-radius:5px; padding:6px 8px; font-size:0.74rem; font-weight:700; cursor:pointer;" title="Delete File from Google Drive">Delete</button>
+                            <button onclick="requestDeleteFile('${item.id}', '${item.cap.replace(/'/g, "\\'")}')" style="background:#ef4444; color:#fff; border:none; border-radius:6px; padding:8px 10px; font-size:0.75rem; font-weight:700; cursor:pointer;">Delete</button>
                         ` : ''}
                     </div>
                 </div>
             `).join('');
         }
-
         function filterFolderList() { renderFolderList(); }
 
-        // 5. Secure File Deletion
+        // --- 14. Gallery File Deletion ---
         function requestDeleteFile(fileId, fileCaption) {
-            if (!isStaffAuthorized) return alert("Access denied! Please open the staff panel first.");
-            if (!confirm(`Delete file "${fileCaption}" from Google Drive and gallery?`)) return;
+            if (!isStaffAuthorized) return showToast("Akses ditolak!", "error");
+            if (!confirm(`Delete file "${fileCaption}" from Drive?`)) return;
 
-            fetch(GALLERY_API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify({ action: "deleteFile", pin: "202425", fileId: fileId })
-            })
-            .then(res => res.json())
-            .then(res => {
+            fetch(GALLERY_API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "deleteFile", pin: "202425", fileId: fileId }) })
+            .then(res => res.json()).then(res => {
                 if (res.status === "success") {
                     ALL_GALLERIES = ALL_GALLERIES.filter(g => g.id !== fileId);
                     renderShowcase(); renderFolderList(); updateFolderCounts();
-                    alert(res.message);
-                } else {
-                    alert("Failed to delete: " + res.message);
-                }
-            })
-            .catch(err => {
-                console.error("Delete error:", err); alert("Network error while deleting file.");
-            });
+                    showToast(res.message, "success"); // Ganti Alert dengan Toast
+                } else showToast("Failed to delete: " + res.message, "error");
+            }).catch(err => showToast("Network error.", "error"));
         }
 
-        // 6. Secure Staff PIN Verification & UI Inject
+        // --- 15. Staff Gallery Content Manager PIN (202425) ---
         function verifyPIN() {
             const pinInput = document.getElementById('staffPin').value.trim();
             if (pinInput === "202425") {
                 isStaffAuthorized = true;
                 document.getElementById('pinBoxWrap').style.display = 'none';
-
                 document.getElementById('uploadGateContainer').innerHTML = `
-                    <div class="animate-fade" style="text-align:left; background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:20px; margin-top:15px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                            <span style="font-size:.76rem; background:#dcfce7; color:#166534; padding:4px 10px; border-radius:4px; font-weight:700;">Active Staff Authorization</span>
-                            <button onclick="logoutStaff()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:4px; font-size:0.75rem; font-weight:700; cursor:pointer;">Lock Access</button>
+                    <div class="animate-fade" style="text-align:left; background:var(--white); border:1px solid var(--border); border-radius:12px; padding:25px; margin-top:20px; box-shadow: var(--shadow);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                            <span style="font-size:.8rem; background:#14532d; color:#bbf7d0; padding:6px 12px; border-radius:6px; font-weight:800;">Gallery Access Opened</span>
+                            <button onclick="logoutStaff()" style="background:#ef4444; color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; cursor:pointer;">Lock Access</button>
                         </div>
                         
-                        <!-- File Upload Section -->
-                        <div style="margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:14px;">
-                            <strong style="font-size:0.88rem; color:var(--slate-d); display:block; margin-bottom:8px;">Upload New Archive File</strong>
-                            <div style="margin-bottom:10px;">
-                                <label style="font-size:.78rem; font-weight:700;">Target Folder Category:</label>
-                                <select id="uCat" style="width:100%; padding:8px; border-radius:6px; border:1px solid #cbd5e1; font-size:0.84rem;">
+                        <!-- Upload Section -->
+                        <div style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:20px;">
+                            <strong style="font-size:1rem; color:var(--slate-d); display:block; margin-bottom:12px;">Upload New Archive File</strong>
+                            <div style="margin-bottom:12px;">
+                                <label style="font-size:.85rem; font-weight:700;">Target Folder Category:</label>
+                                <select id="uCat" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); font-size:0.9rem;">
                                     <option value="kegiatan">1. Activities & HUT</option>
                                     <option value="closing">2. Client Closing</option>
                                     <option value="sertifikat">3. Certifications & License</option>
                                 </select>
                             </div>
-                            <div style="margin-bottom:10px;">
-                                <label style="font-size:.78rem; font-weight:700;">Select Photo File:</label>
-                                <input type="file" id="uFile" accept="image/*" style="width:100%; font-size:.84rem;">
-                            </div>
                             <div style="margin-bottom:12px;">
-                                <label style="font-size:.78rem; font-weight:700;">Moment Description:</label>
-                                <textarea id="uCap" rows="2" placeholder="Write activity details or certification name..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #cbd5e1; font-size:0.84rem;"></textarea>
+                                <label style="font-size:.85rem; font-weight:700;">Select Photo File:</label>
+                                <input type="file" id="uFile" accept="image/*" style="width:100%; font-size:.9rem; border:none;">
                             </div>
-                            <button id="btnUploadSubmit" onclick="saveMem()" class="btn-cta" style="width:100%; padding:10px; background:#16a34a; border:none; cursor:pointer;">
-                                Upload to Google Drive &rarr;
-                            </button>
+                            <div style="margin-bottom:16px;">
+                                <label style="font-size:.85rem; font-weight:700;">Moment Description:</label>
+                                <textarea id="uCap" rows="2" placeholder="Write activity details..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); font-size:0.9rem;"></textarea>
+                            </div>
+                            <button id="btnUploadSubmit" onclick="saveMem()" class="btn-cta" style="width:100%; padding:12px; background:#16a34a; border:none; cursor:pointer;">Upload to Google Drive &rarr;</button>
                         </div>
 
                         <!-- Team Profile Editor -->
-                        <div style="margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:14px;">
-                            <strong style="font-size:0.88rem; color:var(--slate-d); display:block; margin-bottom:8px;">Edit Team Profile & Links</strong>
-                            <div style="margin-bottom:10px;">
-                                <label style="font-size:.78rem; font-weight:700;">Select Staff Member:</label>
-                                <select id="editStaffSelect" onchange="populateStaffForm()" style="width:100%; padding:8px; border-radius:6px; border:1px solid #cbd5e1; font-size:0.84rem;">
+                        <div style="margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:20px;">
+                            <strong style="font-size:1rem; color:var(--slate-d); display:block; margin-bottom:12px;">Edit Team Profile & Links</strong>
+                            <div style="margin-bottom:12px;">
+                                <label style="font-size:.85rem; font-weight:700;">Select Staff Member:</label>
+                                <select id="editStaffSelect" onchange="populateStaffForm()" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); font-size:0.9rem;">
                                     ${TEAM.map((m, idx) => `<option value="${idx}">${m.name} (${m.role})</option>`).join('')}
                                 </select>
                             </div>
-                            <div style="margin-bottom:10px;">
-                                <label style="font-size:.78rem; font-weight:700;">Profile Photo URL (or Image File):</label>
-                                <input type="text" id="editStaffImg" placeholder="https://..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #cbd5e1; font-size:0.84rem; margin-bottom:6px;">
-                                <input type="file" id="editStaffFile" accept="image/*" style="width:100%; font-size:0.78rem;">
-                            </div>
-                            <div class="grid-2" style="gap:8px; margin-bottom:10px;">
-                                <div>
-                                    <label style="font-size:.76rem; font-weight:700;">Instagram Link:</label>
-                                    <input type="text" id="editStaffIg" placeholder="https://instagram.com/..." style="width:100%; padding:6px; border-radius:4px; border:1px solid #cbd5e1; font-size:0.8rem;">
-                                </div>
-                                <div>
-                                    <label style="font-size:.76rem; font-weight:700;">LinkedIn Link:</label>
-                                    <input type="text" id="editStaffLi" placeholder="https://linkedin.com/in/..." style="width:100%; padding:6px; border-radius:4px; border:1px solid #cbd5e1; font-size:0.8rem;">
-                                </div>
-                            </div>
                             <div style="margin-bottom:12px;">
-                                <label style="font-size:.76rem; font-weight:700;">Portfolio Website Link:</label>
-                                <input type="text" id="editStaffWeb" placeholder="https://yourportfolio.com" style="width:100%; padding:6px; border-radius:4px; border:1px solid #cbd5e1; font-size:0.8rem;">
+                                <label style="font-size:.85rem; font-weight:700;">Profile Photo URL (or Image File):</label>
+                                <input type="text" id="editStaffImg" placeholder="https://..." style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); font-size:0.9rem; margin-bottom:8px;">
+                                <input type="file" id="editStaffFile" accept="image/*" style="width:100%; font-size:0.85rem;">
                             </div>
-                            <button onclick="saveStaffProfile()" class="btn-cta" style="width:100%; padding:9px; background:#2563eb; border:none; cursor:pointer;">
-                                Save & Update Team Profile &rarr;
-                            </button>
+                            <div class="grid-2" style="gap:12px; margin-bottom:12px;">
+                                <div><label style="font-size:.85rem; font-weight:700;">Instagram Link:</label><input type="text" id="editStaffIg" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border);"></div>
+                                <div><label style="font-size:.85rem; font-weight:700;">LinkedIn Link:</label><input type="text" id="editStaffLi" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border);"></div>
+                            </div>
+                            <div style="margin-bottom:16px;">
+                                <label style="font-size:.85rem; font-weight:700;">Portfolio Website Link:</label>
+                                <input type="text" id="editStaffWeb" style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--border);">
+                            </div>
+                            <button onclick="saveStaffProfile()" class="btn-cta" style="width:100%; padding:12px; background:#2563eb; border:none; cursor:pointer;">Save & Update Profile &rarr;</button>
                         </div>
                         
                         <!-- Drive Folders Directory -->
-                        <div class="folders-section" style="margin-top:0;">
-                            <strong style="color:var(--slate-d); font-size:0.92rem; display:block;">Google Drive Archive Directories</strong>
-                            <span style="color:var(--muted); font-size:0.76rem;">Open folders to review complete file history or delete records.</span>
-                            
+                        <div class="folders-section" style="margin-top:0; border:none; padding:0;">
+                            <strong style="color:var(--slate-d); font-size:1rem; display:block;">Drive Archive Directories</strong>
                             <div class="folder-grid">
                                 <div class="folder-card" onclick="openFolderModal('kegiatan')">
-                                    <div class="folder-info">
-                                        <span class="folder-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
-                                        <div><strong style="font-size:0.82rem; color:var(--slate-d); display:block;">1. Activities & HUT</strong><span style="font-size:0.72rem; color:var(--muted);" id="cnt-kegiatan">Loading...</span></div>
-                                    </div>
-                                    <span style="color:var(--red-p); font-size:0.8rem; font-weight:700;">Open &rarr;</span>
+                                    <div class="folder-info"><span class="folder-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+                                    <div><strong style="font-size:0.9rem; color:var(--slate-d); display:block;">1. Activities & HUT</strong><span style="font-size:0.8rem; color:var(--muted);" id="cnt-kegiatan">Loading...</span></div></div>
                                 </div>
-
                                 <div class="folder-card" onclick="openFolderModal('closing')">
-                                    <div class="folder-info">
-                                        <span class="folder-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
-                                        <div><strong style="font-size:0.82rem; color:var(--slate-d); display:block;">2. Client Closing</strong><span style="font-size:0.72rem; color:var(--muted);" id="cnt-closing">Loading...</span></div>
-                                    </div>
-                                    <span style="color:var(--red-p); font-size:0.8rem; font-weight:700;">Open &rarr;</span>
+                                    <div class="folder-info"><span class="folder-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+                                    <div><strong style="font-size:0.9rem; color:var(--slate-d); display:block;">2. Client Closing</strong><span style="font-size:0.8rem; color:var(--muted);" id="cnt-closing">Loading...</span></div></div>
                                 </div>
-
                                 <div class="folder-card" onclick="openFolderModal('sertifikat')">
-                                    <div class="folder-info">
-                                        <span class="folder-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
-                                        <div><strong style="font-size:0.82rem; color:var(--slate-d); display:block;">3. Certifications & License</strong><span style="font-size:0.72rem; color:var(--muted);" id="cnt-sertifikat">Loading...</span></div>
-                                    </div>
-                                    <span style="color:var(--red-p); font-size:0.8rem; font-weight:700;">Open &rarr;</span>
+                                    <div class="folder-info"><span class="folder-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+                                    <div><strong style="font-size:0.9rem; color:var(--slate-d); display:block;">3. Certifications</strong><span style="font-size:0.8rem; color:var(--muted);" id="cnt-sertifikat">Loading...</span></div></div>
                                 </div>
                             </div>
                         </div>
                     </div>`;
-
-                updateFolderCounts();
-                populateStaffForm();
+                updateFolderCounts(); populateStaffForm();
+                showToast("Akses Internal Terbuka", "success");
             } else {
-                alert('Incorrect Staff Authorization PIN!');
+                showToast('PIN Authorization Salah!', 'error'); // Ganti alert dengan Toast
                 document.getElementById('staffPin').value = '';
             }
         }
@@ -749,16 +1032,15 @@
             document.getElementById('staffPin').value = '';
             document.getElementById('pinBoxWrap').style.display = 'flex';
             document.getElementById('folderModal').style.display = 'none';
-            alert('Staff access has been locked securely.');
+            showToast("Akses berhasil dikunci", "success");
         }
 
         function populateStaffForm() {
             const idx = document.getElementById('editStaffSelect').value;
-            const member = TEAM[idx];
-            document.getElementById('editStaffImg').value = member.img;
-            document.getElementById('editStaffIg').value = member.ig;
-            document.getElementById('editStaffLi').value = member.li;
-            document.getElementById('editStaffWeb').value = member.web;
+            document.getElementById('editStaffImg').value = TEAM[idx].img;
+            document.getElementById('editStaffIg').value = TEAM[idx].ig;
+            document.getElementById('editStaffLi').value = TEAM[idx].li;
+            document.getElementById('editStaffWeb').value = TEAM[idx].web;
         }
 
         function saveStaffProfile() {
@@ -771,73 +1053,69 @@
 
             if (fileInput) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    TEAM[idx].img = e.target.result;
-                    updateTeamDataFinal(idx, igVal, liVal, webVal);
-                };
+                reader.onload = function(e) { updateTeamDataFinal(idx, e.target.result, igVal, liVal, webVal); };
                 reader.readAsDataURL(fileInput);
-            } else {
-                if (textImg) TEAM[idx].img = textImg;
-                updateTeamDataFinal(idx, igVal, liVal, webVal);
-            }
+            } else { updateTeamDataFinal(idx, textImg, igVal, liVal, webVal); }
         }
 
-        function updateTeamDataFinal(idx, ig, li, web) {
+        function updateTeamDataFinal(idx, img, ig, li, web) {
+            if (img) TEAM[idx].img = img;
             if (ig) TEAM[idx].ig = ig;
             if (li) TEAM[idx].li = li;
             if (web) TEAM[idx].web = web;
             localStorage.setItem('kbru_team_data', JSON.stringify(TEAM));
             renderTeam();
-            alert(`Team profile for ${TEAM[idx].name} updated successfully!`);
+            showToast(`Profile ${TEAM[idx].name} diperbarui!`, "success"); // Ganti alert
         }
 
-        // 7. Execute Google Drive Upload
+        // --- 16. Upload to Google Drive ---
         function saveMem() {
             const cat = document.getElementById('uCat').value;
             const cap = document.getElementById('uCap').value.trim();
             const fl = document.getElementById('uFile').files[0];
             const btn = document.getElementById('btnUploadSubmit');
 
-            if (!cap) return alert('Moment description is required!');
-            if (!fl) return alert('Please select a photo file to upload!');
-
+            if (!cap || !fl) return showToast('File foto dan deskripsi wajib diisi!', 'error');
             const labels = { kegiatan: 'Activities & HUT', closing: 'Client Closing', sertifikat: 'Certifications & License' };
-            btn.disabled = true;
-            btn.innerText = "Uploading photo to Google Drive...";
+            btn.disabled = true; btn.innerText = "Uploading to Drive...";
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const base64Data = e.target.result;
-
                 fetch(GALLERY_API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ pin: "202425", cat: cat, caption: cap, fileName: fl.name, fileData: base64Data })
+                    method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ pin: "202425", cat: cat, caption: cap, fileName: fl.name, fileData: e.target.result })
                 })
                 .then(res => res.json())
                 .then(res => {
                     if (res.status === "success") {
                         ALL_GALLERIES.unshift({ id: res.fileId, cat: cat, tag: labels[cat], cap: cap, img: res.url, timeStr: res.timeStr });
-                        renderShowcase();
-                        updateFolderCounts();
-                        alert(`Photo successfully saved to Google Drive folder: [${res.folder}]!`);
-                        document.getElementById('uCap').value = '';
-                        document.getElementById('uFile').value = '';
-                    } else {
-                        alert('Upload failed: ' + res.message);
-                    }
+                        renderShowcase(); updateFolderCounts();
+                        showToast(`Foto tersimpan di Google Drive!`, "success"); // Ganti alert
+                        document.getElementById('uCap').value = ''; document.getElementById('uFile').value = '';
+                    } else showToast('Upload failed: ' + res.message, "error");
                 })
-                .catch(err => {
-                    console.error("Upload error:", err);
-                    alert('Network error while uploading.');
-                })
-                .finally(() => {
-                    btn.disabled = false;
-                    btn.innerText = "Upload to Google Drive →";
-                });
+                .catch(err => showToast('Network error.', "error"))
+                .finally(() => { btn.disabled = false; btn.innerText = "Upload to Google Drive →"; });
             };
             reader.readAsDataURL(fl);
         }
+        
+        // Inisialisasi awal fitur 3D
+        initTiltEffect();
+
+        // --- Parallax 3D Background Scroll Movement ---
+        const blob1 = document.querySelector('.blob-1');
+        const blob2 = document.querySelector('.blob-2');
+
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.pageYOffset;
+            
+            if (blob1 && blob2) {
+                // Blob bergerak berlawanan arah dengan pergeseran kedalaman sumbu Z
+                blob1.style.transform = `translate3d(${scrollPos * 0.12}px, ${scrollPos * 0.35}px, ${scrollPos * 0.05}px) rotate(${scrollPos * 0.04}deg)`;
+                blob2.style.transform = `translate3d(${-scrollPos * 0.15}px, ${-scrollPos * 0.3}px, ${-scrollPos * 0.05}px) rotate(${-scrollPos * 0.04}deg)`;
+            }
+        });
     </script>
 </body>
 </html>
